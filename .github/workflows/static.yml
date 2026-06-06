@@ -1,0 +1,70 @@
+name: Deploy Main Site and 50 Sub-Sites
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Build 50 Independent Sites via Symlinks
+        run: |
+          # 1. Create the final deployment directory
+          mkdir -p _final_site
+          
+          # 2. Copy everything from your main branch to the root deployment folder
+          cp -R * _final_site/ 2>/dev/null || true
+          
+          # 3. Create a clean list of your root assets to link against
+          # This maps folders like assets, images, css, or js
+          rm -rf _final_site/_final_site
+          
+          # 4. Use an absolute foolproof counter to generate all 50 separate sites
+          COUNTER=1
+          while [ $COUNTER -le 50 ]; do
+            mkdir -p "_final_site/$COUNTER"
+            
+            # Copy just the HTML file so the page functions independently
+            if [ -f "index.html" ]; then
+              cp index.html "_final_site/$COUNTER/index.html"
+            fi
+            
+            # Map every other file/folder from the main branch directly into this folder
+            # This gives the sub-site instant access to your root styles and assets
+            for item in *; do
+              if [ "$item" != "index.html" ] && [ "$item" != "_final_site" ]; then
+                ln -s "../../$item" "_final_site/$COUNTER/$item" 2>/dev/null || true
+              fi
+            done
+            
+            COUNTER=$((COUNTER + 1))
+          done
+
+      - name: Setup GitHub Pages Environment
+        uses: actions/configure-pages@v5
+
+      - name: Upload Workspace Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '_final_site'
+
+      - name: Deploy Live to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

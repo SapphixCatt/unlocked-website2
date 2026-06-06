@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Drive - My Files</title>
+    <link rel="icon" type="image/x-icon" href="https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #0c0c0c;
+            color: #ffffff;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+            width: 100vw;
+        }
+
+        .glow-cyan {
+            color: #00ffff;
+            font-size: 28px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.7), 0 0 20px rgba(0, 255, 255, 0.5);
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        #main-content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .game-selection-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .game-card {
+            background: #111111;
+            border: 1px solid #222222;
+            border-radius: 12px;
+            width: 220px;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s, border-color 0.3s;
+            position: relative;
+            height: auto;
+        }
+
+        .game-card:hover {
+            background: #1a1a1a;
+            border-color: #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+            transform: translateY(-5px);
+        }
+
+        #blank-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: #000;
+            z-index: 2000000;
+            display: none;
+            flex-direction: column;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        #blank-overlay.active { display: flex; }
+
+        #blank-overlay.minimized {
+            height: 48px !important;
+            width: 320px !important;
+            top: auto !important;
+            bottom: 20px !important;
+            left: auto !important;
+            right: 20px !important;
+            border-radius: 10px;
+            border: 2px solid #00ffff;
+            background: #111;
+            overflow: hidden !important;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        }
+
+        /* Hide specific elements on minimize */
+        #blank-overlay.minimized #not-working-btn,
+        #blank-overlay.minimized #fullscreen-btn {
+            display: none !important;
+        }
+
+        /* Hide top navigation bar when iframe container is in HTML5 Fullscreen */
+        #blank-overlay:fullscreen .overlay-nav,
+        #blank-overlay:-webkit-full-screen .overlay-nav {
+            display: none !important;
+        }
+
+        .overlay-nav {
+            height: 48px;
+            min-height: 48px;
+            background: #111;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            border-bottom: 1px solid #333;
+            justify-content: space-between;
+            user-select: none;
+        }
+
+        .nav-btn {
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 900;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            border: none;
+            color: white;
+        }
+        
+        .btn-minimize { background-color: #2563eb !important; }
+        .btn-close { background-color: #dc2626 !important; }
+
+        .img-container {
+            width: 90%;
+            height: 130px;
+            background: #000; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 12px;
+            margin: 10px auto 0;
+        }
+
+        .img-container img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .zoom-out-img img {
+            object-fit: contain !important;
+            padding: 12px !important;
+            background: #000;
+        }
+
+        .game-card span {
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 12px;
+            text-align: center;
+            text-transform: capitalize;
+            display: block;
+            word-wrap: break-word;
+            white-space: normal;
+        }
+
+        .dropdown-menu {
+            position: absolute; top: 100%; left: 0; width: 100%; 
+            background: #1a1a1a; border: 1px solid #333; border-radius: 8px; margin-top: 8px; z-index: 9999; 
+            display: block; visibility: hidden; opacity: 0;
+            transform: translateY(-10px) scale(0.95);
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            overflow-y: auto;
+            max-height: 300px;
+        }
+        
+        .game-card.active-dropdown { z-index: 10000; border-color: #00ffff; }
+        .game-card.active-dropdown .dropdown-menu { visibility: visible; opacity: 1; transform: translateY(0) scale(1); }
+
+        .dropdown-item { 
+            padding: 12px; text-align: center; border-bottom: 1px solid #222; font-size: 13px; color: #ddd; transition: background 0.2s;
+        }
+        .dropdown-item:hover { background: #00ffff; color: #000; font-weight: bold; }
+
+        #iframe-wrapper { flex: 1; position: relative; background: #000; }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        /* Premium Centered Smooth Fade Modal Transitions */
+        #not-working-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999999; /* Higher priority to overlay on top of minimize panels and viewports */
+            background: rgba(0, 0, 0, 0.85);
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        
+        #not-working-modal.show {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+        
+        #not-working-modal .modal-content-box {
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background-color: #050505 !important;
+            border: 1px solid #d1d5db !important; /* Premium light gray outline restored */
+            border-radius: 16px !important; /* Rounded corners */
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.95) !important;
+            padding: 25px !important; /* EXACTLY 25px padding from text/content to border */
+            box-sizing: border-box !important;
+        }
+        
+        #not-working-modal.show .modal-content-box {
+            transform: scale(1) translateY(0);
+        }
+
+        /* Wrap styling designed to preserve natural breaking logic of URLs */
+        #modal-url-text {
+            display: block !important;
+            line-height: 1.5 !important;
+            max-height: 120px;
+            overflow-y: auto;
+            text-align: left !important;
+        }
+
+        #modal-url-text span.url-chunk {
+            display: inline-block;
+        }
+
+        /* Premium Styled Buttons */
+        .premium-btn-cyan {
+            background: linear-gradient(135deg, #00ffff 0%, #00bcbc 100%) !important;
+            color: #000000 !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.05em !important;
+            border: none !important;
+            border-radius: 12px !important;
+            box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3) !important;
+            transition: all 0.2s ease !important;
+            cursor: pointer !important;
+        }
+        .premium-btn-cyan:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 20px rgba(0, 255, 255, 0.5) !important;
+            filter: brightness(1.1) !important;
+        }
+        .premium-btn-cyan:active {
+            transform: translateY(1px) !important;
+        }
+
+        .premium-btn-red {
+            background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%) !important;
+            color: #ffffff !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.05em !important;
+            border: none !important;
+            border-radius: 12px !important;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3) !important;
+            transition: all 0.2s ease !important;
+            cursor: pointer !important;
+        }
+        .premium-btn-red:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5) !important;
+            filter: brightness(1.1) !important;
+        }
+        .premium-btn-red:active {
+            transform: translateY(1px) !important;
+        }
+
+        /* Premium Top Bar Button Style */
+        #not-working-btn {
+            background: linear-gradient(135deg, #00ffff 0%, #00bcbc 100%) !important;
+            color: #000000 !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.05em !important;
+            border: none !important;
+            border-radius: 12px !important;
+            box-shadow: 0 4px 15px rgba(0, 255, 255, 0.4) !important;
+            transition: all 0.2s ease !important;
+            cursor: pointer !important;
+            padding: 6px 14px !important;
+            font-size: 11px !important;
+            text-transform: uppercase !important;
+        }
+        #not-working-btn:hover {
+            transform: scale(1.05) !important;
+            box-shadow: 0 6px 20px rgba(0, 255, 255, 0.6) !important;
+            filter: brightness(1.1) !important;
+        }
+        #not-working-btn:active {
+            transform: scale(0.98) !important;
+        }
+
+        /* Fullscreen Button Style - Exact #333333 Color */
+        #fullscreen-btn {
+            background-color: #333333 !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            border: none !important;
+            border-radius: 6px !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+            transition: all 0.2s ease !important;
+            cursor: pointer !important;
+        }
+        #fullscreen-btn:hover {
+            transform: scale(1.05) !important;
+            background-color: #444444 !important;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6) !important;
+        }
+        #fullscreen-btn:active {
+            transform: scale(0.95) !important;
+        }
+    </style>
+</head>
+<body onclick="closeAllDropdowns(event)">
+
+    <!-- Assistant Modal with Premium Black Styling and Light Gray Outline -->
+    <div id="not-working-modal">
+        <div class="modal-content-box max-w-md w-full text-center">
+            <h3 class="text-[#00ffff] font-black text-xl mb-4 uppercase tracking-wider">Bypass Assistant</h3>
+            <p class="text-sm text-gray-300 mb-6 leading-relaxed">
+                If the game/tool you're trying to access isn't working, try opening it in a proxy like Lucide, Lunar V2 or Dogeub
+            </p>
+            <div class="bg-black border border-gray-800 rounded-xl p-3 mb-6 flex items-center justify-between">
+                <!-- Spans with word chunks injected dynamically -->
+                <span id="modal-url-text" class="text-xs text-gray-400 flex-1 mr-2 text-left font-mono"></span>
+            </div>
+            <div class="flex gap-4 justify-center">
+                <button class="premium-btn-red px-6 py-2.5 rounded-xl text-sm uppercase tracking-wide transition-all duration-200" onclick="closeNotWorkingModal()">Close</button>
+                <button id="copy-btn" class="premium-btn-cyan px-6 py-2.5 rounded-xl text-sm uppercase tracking-wide transition-all duration-200" onclick="copyModalUrl()">Copy Link</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="blank-overlay">
+        <div class="overlay-nav">
+            <div class="flex items-center gap-3">
+                <div class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></div>
+                <span id="active-title" style="font-size: 11px; color: #fff; font-weight: 900; text-transform: uppercase;">HOME</span>
+                <!-- Premium Glowing Cyan Top Bar Trigger -->
+                <button id="not-working-btn" onclick="showNotWorkingModal()">Blocked or Not Working?</button>
+            </div>
+            <div class="flex gap-2">
+                <!-- Styled Fullscreen Button with exact #333333 background color and hover logic -->
+                <button id="fullscreen-btn" class="nav-btn transition-all duration-200 shadow-md shadow-black/40" onclick="toggleFullscreen()">Fullscreen</button>
+                <button id="minimize-btn" class="nav-btn btn-minimize" onclick="toggleMinimize()">Minimize</button>
+                <button class="nav-btn btn-close" onclick="closeOverlay()">Close</button>
+            </div>
+        </div>
+        <div id="iframe-wrapper">
+            <iframe id="overlay-frame"></iframe>
+        </div>
+    </div>
+
+    <main id="main-content">
+        <h1 class="glow-cyan">Unblocked Games</h1>
+        <div class="game-selection-container" id="gridContainer"></div>
+        <h2 class="glow-cyan mt-12">Other Tools</h2>
+        <div class="game-selection-container" id="otherContainer"></div>
+    </main>
+
+    <script>
+        const games = [
+            { id: 'slope', name: 'slope', url: "https://playslope.pages.dev/assets/Slope-Game-main/", img: "Images/Games/slope.jpg" },
+            { 
+                id: 'gd', name: 'geometry dash', img: "Images/Games/geometrydash.jpg",
+                zoomOut: true,
+                options: [
+                    { name: 'Lite', url: 'https://geometrydash23.com/' },
+                    { name: 'SubZero', url: 'https://lolygames.github.io/gd-zubero/' },
+                    { name: 'Meltdown', url: 'https://geometrydashworld.online/' },
+                    { name: 'World', url: 'https://geometrydashlite.io/geometry-dash-world' },
+                    { name: 'Breeze', url: 'https://1games.io/game/geometry-dash-breeze/' }
+                ]
+            },
+            { id: 'nealfun', name: 'Neal.fun', url: "https://neal.fun", img: "Images/Games/nealfun.jpg", zoomOut: true },
+            { id: 'slitherio', name: 'Slither.io', url: "http://slither.com/io", img: "Images/Games/slitherio.jpg", zoomOut: true },
+            { id: 'winterfox', name: 'Winter Fox', url: "https://html-classic.itch.zone/html/4411977/index.html", img: "Images/Games/winterfox.jpg", zoomOut: true },
+            { id: 'paperio', name: 'Paper.io', url: "https://games.voodoo.io/paperio2", img: "Images/Games/paperio.jpg", zoomOut: true },
+            { id: 'chesscom', name: 'Chess.com', url: "https://chess.com", img: "Images/Games/chesscom.jpg", zoomOut: true },
+            { id: 'agario', name: 'Agar.io', url: "https://agar.io/#ffa", img: "Images/Games/agario.jpg" },
+            { id: 'holeio', name: 'Hole.io', url: "https://holeio.com", img: "Images/Games/holeio.jpg" },
+            { id: 'fnaf', name: 'Five Nights At Freddys', url: "https://dorukyum.github.io/FNAF-Web/", img: "Images/Games/fnaf.jpg", zoomOut: true },
+            { id: 'happywheels', name: 'Happy Wheels', url: "https://games.crazygames.com/en_US/happy-wheels/index.html?czySeasonWorldCup=false&czySeasonWorldCupKeyMatch=false&isNewUser=false&__nextLocale=en-US&v=2.2", img: "Images/Games/happywheels.jpg", zoomOut: true },
+            { id: 'spaceWaves', name: 'space waves', url: "Games/Space Waves/spacewaves.html", img: "Images/Games/spacewaves.jpg" },
+            { id: 'amongUs', name: 'among us', url: "https://stgames.top/unity/amongus/", img: "Images/Games/amongus.jpg" },
+            { id: 'stickmanHook', name: 'stickman hook', url: "https://spaedu23.github.io/g5/class-406/", img: "Images/Games/stickmanhook.jpg" },
+            { 
+                id: 'minecraft', name: 'minecraft', img: "Images/Games/minecraft.jpg",
+                options: [
+                    { name: 'Astra Client 1.6.0', url: './Games/Minecraft/Astra_Client_1.6.0.html' },
+                    { name: 'EaglyMC 1.20', url: './Games/Minecraft/EaglyMC_1.20.html' },
+                    { name: 'Pixel Client 1.8.8', url: './Games/Minecraft/Pixel_Client_1.8.8.html' },
+                    { name: 'Pixel Client 1.12.2', url: './Games/Minecraft/Pixel_Client_1.12.2.html' },
+                    { name: 'Release 1.8.8', url: './Games/Minecraft/Release_1.8.8.html' },
+                    { name: 'Release 1.12.2', url: './Games/Minecraft/Release_1.12.2.html' },
+                    { name: 'Resent Client 4.0', url: './Games/Minecraft/Resent_Client_4.0.html' },
+                    { name: 'Resent Client 5.0', url: './Games/Minecraft/Resent_Client_5.0.html' },
+                    { name: 'Tuff Client 1.12.2', url: './Games/Minecraft/Tuff_Client_1.12.2.html' }
+                ]
+            }
+        ];
+
+        const other = [
+            { id: 'ai', name: 'Unlocks AI', url: "https://unlocks-ai-653511058784.europe-west2.run.app", img: "Images/Other/unlocksai.png", zoomOut: true },
+            { 
+                id: 'lucide', name: 'Lucide', img: "Images/Other/lucide.png", zoomOut: true,
+                options: [
+                    { name: 'Web 1', url: 'https://lsrelay-l.s3.amazonaws.com/index.html' },
+                    { name: 'Web 2', url: 'https://unpkg.com/browselucide@1.0.2/logo.svg#/' },
+                    { name: 'Web 3', url: 'https://pub-bc82e2ed41754dc4b80c6d83a173f04b.r2.dev/index.html#/' },
+                    { name: 'Web 4', url: 'https://lucide.fortbendisd.cc' },
+                    { name: 'Web 5', url: 'https://luci.plasmii.vip' },
+                    { name: 'Web 6', url: 'https://jian-danggelao-shi.global.ssl.fastly.net' },
+                    { name: 'Web 7', url: 'https://originfastly.jsdelivr.net/gh/coinbaselarper/svg@latest/logo.svg#/' },
+                    { name: 'Web 8', url: 'https://gcore.jsdelivr.net/gh/coinbaselarper/svg@latest/logo.svg#/' },
+                    { name: 'Web 9', url: 'https://fastly.jsdelivr.net/gh/coinbaselarper/svg@latest/logo.svg#/' },
+                    { name: 'Web 10', url: 'https://quantil.jsdelivr.net/gh/coinbaselarper/svg@latest/logo.svg#/' },
+                    { name: 'Web 11', url: 'https://cdn.skypack.dev/-/browselucide@v1.0.2-zpEUO42W9aFbC42Tbb8J/dist=es2019,mode=raw/logo.svg#/' }
+                ]
+            },
+            { 
+                id: 'lunar', name: 'Lunar', img: "Images/Other/lunar.png", zoomOut: true,
+                options: [
+                    { name: 'Web 1', url: 'https://gawd.rcdx93.net' },
+                    { name: 'Web 2', url: 'https://tacotruck.sesaech.gob.mx' },
+                    { name: 'Web 3', url: 'https://lunarrr.eminescusm.ro' }
+                ]
+            },
+            { id: 'movish', name: 'Movish', url: "https://movish.net", img: "Images/Other/movish.png" },
+            { id: 'tmovie', name: 'TMovie', url: "https://www.tmovie.in", img: "Images/Other/tmovie.png", zoomOut: true },
+            { id: 'tv', name: 'Live TV', url: 'https://tv247.us/', img: "Images/Other/livetv.png" },
+            { id: 'cineby', name: 'Cineby', url: "https://www.cineby.sc", img: "Images/Other/cineby.png", zoomOut: true },
+            { 
+                id: 'dogeub', name: 'Dogeub', img: "Images/Other/dogeub.png", zoomOut: true,
+                options: [
+                    { name: 'Web 1', url: 'https://canvas-lms.storage.googleapis.com/index.html' },
+                    { name: 'Web 2', url: 'https://s3.amazonaws.com/deltamath-demo/index.html' },
+                    { name: 'Web 3', url: 'https://storage.googleapis.com/educationate/index.html' },
+                    { name: 'Web 4', url: 'https://s3.amazonaws.com/educationate/index.html' },
+                    { name: 'Web 5', url: 'https://storage.googleapis.com/instructure/index.html' },
+                    { name: 'Web 6', url: 'https://lsrelay-1.s3.amazonaws.com/index.htm' },
+                    { name: 'Web 7', url: 'https://s3.amazonaws.com/lsrelay-1/index.html' },
+                    { name: 'Web 8', url: 'https://active.plik-perm.ru' },
+                    { name: 'Web 9', url: 'https://edu.nextcomm.com.ar' },
+                    { name: 'Web 10', url: 'https://getaway.champagnewishesandrvdreams.com' },
+                    { name: 'Web 11', url: 'https://edu.quevo.com.br' },
+                    { name: 'Web 12', url: 'https://edu.italianish.beltfrog.com' },
+                    { name: 'Web 13', url: 'https://tasty.how-to-cook.airlinemeals.net' }
+                ]
+            }
+        ];
+
+        // Fallback Mapping for Local/Un-hosted URLs
+        const fallbackUrls = {
+            "Games/Space Waves/spacewaves.html": "https://games.crazygames.com/en_US/space-waves/index.html?czyExpPauseVideos_CZY_19495=disabled&czyGPModelSwitcher_20260512=ineligible&isNewUser=false&__nextLocale=en-US&v=1.357",
+            "./Games/Minecraft/Astra_Client_1.6.0.html": "https://eaglercraft.dev/clients/Astra%20Client%201.6.0%20WASM/index.html",
+            "./Games/Minecraft/EaglyMC_1.20.html": "https://eaglercraft.dev/clients/EaglyMC%201.20%20WASM/index.html",
+            "./Games/Minecraft/Pixel_Client_1.8.8.html": "https://eaglercraft.dev/clients/PixelClient%203%201.8.8%20WASM/index.html",
+            "./Games/Minecraft/Pixel_Client_1.12.2.html": "https://eaglercraft.dev/clients/PixelClient%203%201.12.2%20WASM/index.html",
+            "./Games/Minecraft/Release_1.8.8.html": "https://eaglercraft.dev/clients/Release%201.8.8%20WASM/index.html",
+            "./Games/Minecraft/Release_1.12.2.html": "https://eaglercraft.dev/clients/Release%201.12.2%20WASM/index.html",
+            "./Games/Minecraft/Resent_Client_4.0.html": "https://eaglercraft.dev/clients/Resent%20Client%204.0%20JS/index.html",
+            "./Games/Minecraft/Resent_Client_5.0.html": "https://eaglercraft.dev/clients/Resent%20Client%205.0%20WASM/index.html",
+            "./Games/Minecraft/Tuff_Client_1.12.2.html": "https://eaglercraft.dev/clients/Tuff%20Client%20WASM/index.html"
+        };
+
+        let currentActiveUrl = "";
+
+        function createCard(item, container) {
+            const card = document.createElement('div');
+            card.className = 'game-card';
+            if(item.id) card.id = item.id;
+            
+            let extraClasses = '';
+            if (item.zoomOut) extraClasses += ' zoom-out-img';
+
+            let media = `<div class="img-container${extraClasses}">`;
+            // If the image fails to load, we make it transparent to reveal the container's solid black background
+            media += `<img src="${item.img}" onerror="this.style.opacity='0';">`;
+            media += `</div>`;
+            media += `<span>${item.name}</span>`;
+            
+            card.innerHTML = media;
+
+            if (item.options) {
+                const drop = document.createElement('div');
+                drop.className = 'dropdown-menu';
+                item.options.forEach(o => {
+                    const div = document.createElement('div');
+                    div.className = 'dropdown-item';
+                    div.innerText = o.name;
+                    div.onclick = (e) => { e.stopPropagation(); run(o.url, `${item.name} - ${o.name}`); };
+                    drop.appendChild(div);
+                });
+                card.appendChild(drop);
+            }
+
+            card.onclick = (e) => {
+                e.stopPropagation();
+                if (item.options) {
+                    const isActive = card.classList.contains('active-dropdown');
+                    document.querySelectorAll('.game-card').forEach(c => c.classList.remove('active-dropdown'));
+                    if (!isActive) card.classList.add('active-dropdown');
+                } else run(item.url, item.name);
+            };
+            container.appendChild(card);
+        }
+
+        function run(url, title = "System") {
+            const overlay = document.getElementById('blank-overlay');
+            const frame = document.getElementById('overlay-frame');
+            const titleEl = document.getElementById('active-title');
+            
+            currentActiveUrl = url; // Update trackable URL
+
+            overlay.classList.add('active');
+            titleEl.innerText = title;
+            
+            // Apply sandboxing globally to block any popup/new tab creation
+            frame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-modals');
+            
+            frame.src = url;
+
+            frame.onload = () => {
+                frame.focus();
+                window.focus();
+                frame.contentWindow.focus();
+            };
+        }
+
+        function closeOverlay() {
+            document.getElementById('blank-overlay').classList.remove('active');
+            document.getElementById('overlay-frame').src = "about:blank";
+            document.getElementById('overlay-frame').removeAttribute('sandbox');
+            currentActiveUrl = "";
+        }
+
+        function toggleMinimize() {
+            document.getElementById('blank-overlay').classList.toggle('minimized');
+            document.getElementById('minimize-btn').innerText = document.getElementById('blank-overlay').classList.contains('minimized') ? "Expand" : "Minimize";
+        }
+
+        function toggleFullscreen() {
+            const overlay = document.getElementById('blank-overlay');
+            if (!document.fullscreenElement) {
+                overlay.requestFullscreen().catch(err => {
+                    console.error(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Helper functions to handle fallback URL modal and copy workflows
+        function getDirectUrl(url) {
+            if (fallbackUrls[url]) {
+                return fallbackUrls[url];
+            }
+            if (url && (url.startsWith('.') || (!url.startsWith('http') && !url.startsWith('blob')))) {
+                return new URL(url, window.location.href).href;
+            }
+            return url || "No link found";
+        }
+
+        // Dynamic 100-character breaking logic to keep layout perfectly aligned
+        function chunkText(text, size) {
+            if (!text) return '';
+            const chunks = [];
+            for (let i = 0; i < text.length; i += size) {
+                chunks.push(text.slice(i, i + size));
+            }
+            return chunks.map(chunk => `<span class="url-chunk">${chunk}</span>`).join('<br>');
+        }
+
+        // Setup modal content
+        function showNotWorkingModal() {
+            const modal = document.getElementById('not-working-modal');
+            const urlText = document.getElementById('modal-url-text');
+            const targetUrl = getDirectUrl(currentActiveUrl);
+            
+            // Re-render URL with exactly 100 character line-breaks
+            urlText.innerHTML = chunkText(targetUrl, 100);
+            
+            modal.classList.remove('hidden');
+            // Force reflow for fade transitions
+            void modal.offsetWidth;
+            modal.classList.add('show');
+        }
+
+        function closeNotWorkingModal() {
+            const modal = document.getElementById('not-working-modal');
+            modal.classList.remove('show');
+            setTimeout(() => {
+                if (!modal.classList.contains('show')) {
+                    modal.classList.add('hidden');
+                }
+            }, 300);
+        }
+
+        function copyModalUrl() {
+            const urlText = getDirectUrl(currentActiveUrl);
+            const el = document.createElement('textarea');
+            el.value = urlText;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            const copyBtn = document.getElementById('copy-btn');
+            const originalText = copyBtn.innerText;
+            copyBtn.innerText = "Copied!";
+            copyBtn.classList.remove('bg-[#00ffff]', 'hover:bg-cyan-300');
+            copyBtn.classList.add('bg-green-500', 'hover:bg-green-600', 'text-white');
+            
+            setTimeout(() => {
+                copyBtn.innerText = originalText;
+                copyBtn.classList.add('bg-[#00ffff]', 'hover:bg-cyan-300');
+                copyBtn.classList.remove('bg-green-500', 'hover:bg-green-600', 'text-white');
+            }, 1500);
+        }
+
+        function closeAllDropdowns(e) {
+            if (!e.target.closest('.game-card')) document.querySelectorAll('.game-card').forEach(c => c.classList.remove('active-dropdown'));
+        }
+
+        window.onload = () => {
+            const grid = document.getElementById('gridContainer');
+            const otherCont = document.getElementById('otherContainer');
+            
+            // Clear existing elements to resolve duplication glitches
+            if (grid) grid.innerHTML = '';
+            if (otherCont) otherCont.innerHTML = '';
+            
+            games.forEach(g => createCard(g, grid));
+            other.forEach(o => createCard(o, otherCont));
+        };
+    </script>
+</body>
+</html>
