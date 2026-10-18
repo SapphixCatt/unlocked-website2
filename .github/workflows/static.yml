@@ -24,32 +24,43 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Build 50 Independent Sites via Symlinks
+      - name: Build 50 Independent Sites (Physical Copies - No Symlinks)
         run: |
-          # Create the final deployment directory
+          # 1. Create the final deployment directory
           mkdir -p _final_site
           
-          # Copy root files/folders while explicitly excluding _final_site to prevent infinite recursion
+          # 2. Copy all root files/folders into _final_site (excluding _final_site itself)
           for item in *; do
             if [ "$item" != "_final_site" ]; then
               cp -R "$item" _final_site/ 2>/dev/null || true
             fi
           done
           
-          # Use a loop to generate all 50 separate sub-sites cleanly
+          # 3. Generate all 50 separate sub-sites using clean physical copies
           COUNTER=1
           while [ $COUNTER -le 50 ]; do
-            mkdir -p "_final_site/$COUNTER"
+            SUB_DIR="_final_site/$COUNTER"
+            mkdir -p "$SUB_DIR"
             
-            # Copy the index file so the sub-site functions independently
-            if [ -f "index.html" ]; then
-              cp index.html "_final_site/$COUNTER/index.html"
+            # Copy index.html so the sub-site has its own entry point
+            if [ -f "_final_site/index.html" ]; then
+              cp "_final_site/index.html" "$SUB_DIR/index.html"
             fi
             
-            # Map every other file/folder directly into this sub-site folder via symlinks
-            for item in *; do
-              if [ "$item" != "index.html" ] && [ "$item" != "_final_site" ]; then
-                ln -s "../../$item" "_final_site/$COUNTER/$item" 2>/dev/null || true
+            # Copy every asset/folder physically into the sub-site directory
+            for item in _final_site/*; do
+              base_item=$(basename "$item")
+              
+              # Exclude index.html and numbers 1 to 50 to avoid recursive/nested loops
+              if [ "$base_item" != "index.html" ]; then
+                is_subsite=false
+                if [ "$base_item" -ge 1 ] 2>/dev/null && [ "$base_item" -le 50 ] 2>/dev/null; then
+                  is_subsite=true
+                fi
+                
+                if [ "$is_subsite" = false ]; then
+                  cp -R "$item" "$SUB_DIR/" 2>/dev/null || true
+                fi
               fi
             done
             
