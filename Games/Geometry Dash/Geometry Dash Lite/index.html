@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geometry Dash Lite</title>
+  <link rel="icon" type="image/png" href="img/GDL.png">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #000;
+    }
+
+    /* Game Container & Unity Canvas */
+    #gameContainer {
+      width: 100vw;
+      height: 100vh;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Loading Screen Container */
+    #loadingScreen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      transition: opacity 0.3s ease;
+    }
+
+    /* Fullscreen Background Image */
+    .fullscreen-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
+
+    /* Centered Overlay Container */
+    .logo-container {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .robtop-logo {
+      transform: scale(0.8);
+      height: auto;
+      margin-bottom: 4px;
+    }
+
+    .gj-logo {
+      transform: scale(0.8);
+      height: auto;
+    }
+
+    /* Loading Bar Wrapper */
+    .loading-bar-wrapper {
+      position: relative;
+      margin-top: 20px;
+      transform: scale(0.8);
+      display: inline-block;
+    }
+
+    .slider-groove {
+      display: block;
+      height: auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Inner Loading Fill */
+    .loading-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      z-index: 1;
+      object-fit: cover;
+      object-position: left; 
+      animation: fillProgress 2s linear forwards;
+    }
+
+    @keyframes fillProgress {
+      0% {
+        width: 0%;
+      }
+      100% {
+        width: 100%;
+      }
+    }
+
+    /* Random Text Image */
+    .random-text-img {
+      position: absolute;
+      bottom: calc((45vh - 120px) / 2);
+      left: 50%;
+      transform: translateX(-50%) scale(0.5);
+      z-index: 2;
+      height: auto;
+    }
+
+    /* Bottom Right Logos Stack */
+    .bottom-right-logos {
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .fmod-logo,
+    .cocos-logo {
+      height: auto;
+      transform: scale(0.8);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Game Container for Unity Canvas -->
+  <div id="gameContainer"></div>
+
+  <!-- Loading Screen -->
+  <div id="loadingScreen">
+    <img class="fullscreen-bg" src="img/BG_Load.png" alt="Background">
+
+    <div class="logo-container">
+      <img class="robtop-logo" src="img/RobTopLogoBig_001.png" alt="RobTop Logo">
+      <img class="gj-logo" src="img/GJ_logo_001.png" alt="Geometry Dash Logo">
+      
+      <div class="loading-bar-wrapper">
+        <img class="slider-groove" src="img/slidergroove-uhd.png" alt="Loading Bar Groove">
+        <img class="loading-fill" id="loadingFill" src="img/loadingBar-uhd.png" alt="Loading Bar Fill">
+      </div>
+    </div>
+
+    <img id="randomText" class="random-text-img" src="" alt="Loading Text">
+
+    <div class="bottom-right-logos">
+      <img class="fmod-logo" src="img/fmodLogo.png" alt="FMOD Logo">
+      <img class="cocos-logo" src="img/cocos2DxLogo.png" alt="Cocos2Dx Logo">
+    </div>
+  </div>
+
+  <!-- Unity Loader Scripts -->
+  <script src="./Build/UnityLoader.js"></script>
+  <script src="./themes/geometrydashlite.io/rs/js/jquery-3.4.1.min.js"></script>
+
+  <script>
+    // Random loading text selector
+    const randomIndex = Math.floor(Math.random() * 68) + 1;
+    document.getElementById('randomText').src = `img/load-screen-text/text${randomIndex}.png`;
+
+    // Initialize Unity Instance
+    var gameInstance = UnityLoader.instantiate("gameContainer", "./Build/GeometryDashLite.json");
+
+    // Hide loading screen 2 seconds after loading bar animation ends
+    const loadingFill = document.getElementById('loadingFill');
+    const loadingScreen = document.getElementById('loadingScreen');
+
+    loadingFill.addEventListener('animationend', () => {
+      setTimeout(() => {
+        loadingScreen.style.display = 'none';
+      }, 2000); // 2000ms (2 seconds) delay
+    });
+
+    // Auto-click "OK" buttons script from second file
+    document.addEventListener('DOMContentLoaded', function() {
+      let buttondiv = document.getElementsByTagName('button');
+      for (let i = 0; i < buttondiv.length; i++) {
+        if (buttondiv[i].innerHTML == "OK") {
+          buttondiv[i].click();
+        }
+      }
+      setTimeout(function() {
+        let buttonok = document.getElementsByTagName('button');
+        for (let i = 0; i < buttonok.length; i++) {
+          if (buttonok[i].innerHTML == "OK") {
+            buttonok[i].click();
+          }
+        }
+      }, 1000);
+    });
+  </script>
+
+</body>
+</html>

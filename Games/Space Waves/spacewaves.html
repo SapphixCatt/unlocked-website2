@@ -1,98 +1,418 @@
-<!DOCTYPE html><html lang="en"><head><script>window.czyVariables={"countryCode":"NL","device":{"os":{"name":"Windows","version":"10"},"browser":{"name":"Chrome","version":"144.0.0.0","major":"144"},"device":{"type":"desktop"},"engine":{"name":"Blink","version":"144.0.0.0"}},"geo":{"countryCode":"NL","city":"Kerkrade","unlocode":"NL/KER","longitude":"6.06250","latitude":"50.86583","region":"Limburg","regionCode":"LI","metroCode":null,"postalCode":"6461"}}</script><title>Space Waves Game Files - Crazy Games</title><link href="https://www.crazygames.com/game/space-waves" rel="canonical"><meta charset="UTF-8"><meta name="robots" content="noindex, follow"><meta name="description" content="The game files for Space Waves, a free browser game on CrazyGames.com"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="Accept-CH" content="DPR"><meta name="viewport" content="width=device-width, maximum-scale=1.0, initial-scale=1.0, user-scalable=no, minimal-ui"><link rel="preconnect" href="https://builds.crazygames.com"><link rel="preload" href="https://fonts.googleapis.com/css2?display=swap&family=Nunito:wght@400;600;700;800;900" as="style" onload="this.onload=null;this.rel='stylesheet'"><style id="ziggyLoaderStyles">html {
-  width: 100%;
-  height: 100%;
-  position: relative;
+<html lang="en-US"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Space Waves</title><meta name="description" content="Space Waves is an exciting side-scrolling game that combines fast-paced action and challenges. Control an arrow to fly through space tunnels full of obstacles."><meta name="title" content="Space Waves"><meta name="keywords" content="Space Waves"><meta name="news_keywords" content="Space Waves"><link rel="canonical" href="https://spacewaves.io/"><link rel="icon" href="images/space-waves.jpg"><!-- META FOR FACEBOOK --><meta property="og:title" content="Space Waves" itemprop="headline"><meta property="og:type" content="website"><meta property="og:url" itemprop="url" content="https://spacewaves.io/"><meta property="og:image" itemprop="thumbnailUrl" content="images/space-waves1.png"><meta property="og:description" content="Space Waves is an exciting side-scrolling game that combines fast-paced action and challenges. Control an arrow to fly through space tunnels full of obstacles." itemprop="description"><meta property="og:site_name" content="Space Waves"><link rel="apple-touch-icon" href="images/space-waves.jpg"><!-- META FOR TWITTER --><meta name="twitter:title" content="Space Waves"><meta name="twitter:url" content="https://spacewaves.io/"><meta name="twitter:image" content="images/space-waves1.png"><meta name="twitter:description" content="Space Waves is an exciting side-scrolling game that combines fast-paced action and challenges. Control an arrow to fly through space tunnels full of obstacles."><meta name="twitter:card" content="summary"><link rel="stylesheet" href="css/reboot.css"><link rel="stylesheet" href="css/body-style.css"><link rel="stylesheet" href="css/home_1.css"> <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-C0H7N393BB"></script><script>window.dataLayer = window.dataLayer || [];
+ function gtag() {
+ dataLayer.push(arguments);
+ }
+ gtag('js', new Date());
+
+ gtag('config', 'G-C0H7N393BB');</script>		<script async="" src="js/adsbygoogle.js"></script><meta name="google-adsense-account" content="ca-pub-3669370410817131"> </head><body><style>.cr-img img{
+	width: 90px;
+ height: 90px;
+}</style><div style=" position: fixed; top: 0; left: 0;width:100vw; height:100vh;"><link rel="stylesheet" href="css/home.css"><link rel="stylesheet" href="css/game.css">	<style>img{	
+ height: auto;
+}
+.cr-img img{
+	width: 90px;
+ height: 90px;
+}</style><!-- Game -->
+<style>
+html {
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+html, body {
+    height: 100%;
+}
+canvas {
+    display: block;
 }
 body {
-  width: 100%;
-  height: 100%;
+    margin: 0;
+}
+#unity-container {
+    width: 100%;
+    height: 100%;
+}
+#unity-canvas {
+    width: 100%;
+    height: 100%;
+    background: #1F319E;
+}
+#loading-cover {
+    display: none !important;
+}
+#unity-loading-bar {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#unity-logo {
+    text-align: center;
+}
+#unity-logo img {
+    max-width: 80%;
+}
+#unity-progress-bar-empty {
+    width: 250px;
+    height: 24px;
+    border-radius: 5px;
+    margin: 10px 20px 20px 10px;
+    text-align: left;
+    border: 1px solid #ffffff;
+    padding: 2px;
+}
+#unity-progress-bar-full {
+    width: 0%;
+    height: 100%;
+    border-radius: 3px;
+    background: #ffffff;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+.spinner,
+.spinner:after {
+  border-radius: 50%;
+  width: 5em;
+  height: 5em;
+}
+.spinner {
+  margin: 10px;
+  font-size: 10px;
   position: relative;
-  background-color: #13141E;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
+  text-indent: -9999em;
+  border-top: 1.1em solid rgba(255, 255, 255, 0.2);
+  border-right: 1.1em solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1.1em solid rgba(255, 255, 255, 0.2);
+  border-left: 1.1em solid #ffffff;
+  transform: translateZ(0);
+  animation: spinner-spin 1.1s infinite linear;
 }
-
-.ziggyLoader {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  color: #F9FAFF;
-  font-family: 'Nunito',Arial,"Helvetica Neue",Helvetica,sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  position: absolute;
-  z-index: 3;
-  background-image: linear-gradient(180deg, #090C15 0%, #16143C 50%, #452A65 100%);
-}
-
-@keyframes bob {
+@keyframes spinner-spin {
   0% {
-    transform: translate(0px, 0px); }
-  50% {
-    transform: translate(0px, 10.5px); }
+    transform: rotate(0deg);
+  }
   100% {
-    transform: translate(0px, 0px); }
-}
-</style><script type="text/javascript" src="js/bundle.js" async="" fetchpriority="high"></script></head><body><div class="ziggyLoader" id="ziggyLoader"><div class="container"><svg viewBox="0 0 46 50" focusable="false" aria-hidden="true" style="opacity:0.5;display:inline-block;fill:currentcolor;height:24px;width:24px;width:46px;height:50px;-webkit-animation:bob 800ms linear infinite normal forwards;animation:bob 800ms linear infinite normal forwards;"><path fill-rule="evenodd" clip-rule="evenodd" d="M39.9436 1.74993C39.685 1.46063 39.3511 1.33714 38.9704 1.33714L38.9668 1.35126C37.5519 1.35126 35.4655 3.05179 34.004 4.4348C30.9264 2.96006 27.145 2.2368 22.552 2.2368C17.959 2.2368 14.1776 2.96006 11.1036 4.43127C9.64206 3.04826 7.55563 1.34773 6.14434 1.34773C5.76009 1.34773 5.42971 1.47121 5.17116 1.76051C2.97341 4.23723 2.76513 10.1679 2.84414 13.5831C1.853 16.2504 1.35025 19.3692 1.35025 22.9325C1.35025 30.4191 3.53362 35.9653 7.83215 39.4334C10.7302 41.7655 14.5116 43.1097 19.3308 43.5119C19.1291 43.6103 18.9246 43.7083 18.7177 43.8075C18.3463 43.9855 17.9671 44.1673 17.5819 44.3621L15.8367 45.2018L14.8455 45.6781C14.5704 45.8188 14.2933 45.9551 14.013 46.0931C13.3089 46.4395 12.5847 46.7959 11.8218 47.2552L11.5597 47.3892C11.4843 47.4421 11.4161 47.5303 11.4017 47.6327C11.3658 47.8232 11.4986 48.0031 11.6926 48.0313C11.996 48.0753 12.2985 48.1241 12.6008 48.1729C13.2681 48.2806 13.935 48.3883 14.6121 48.4441L15.3483 48.5253C15.5925 48.55 15.8331 48.5711 16.0845 48.5852L17.5604 48.6664C17.7902 48.6734 18.0201 48.6734 18.2499 48.6734C19.9987 48.6734 21.7548 48.557 23.4929 48.2889C25.4608 47.996 27.3964 47.4563 29.253 46.7048C31.106 45.9533 32.8728 44.9725 34.4744 43.7835C37.6489 41.3597 40.1447 38.0998 41.6278 34.4694C42.1701 33.1534 42.5795 31.788 42.8668 30.4015C43.4557 28.1753 43.7537 25.6845 43.7537 22.9255C43.7537 19.3727 43.2546 16.2609 42.267 13.5937C42.3496 10.182 42.1449 4.23017 39.9436 1.74993ZM33.7454 2.83305C35.8857 0.927886 37.6022 0 38.9704 0C39.7712 0 40.4607 0.299887 40.9743 0.874965C43.3156 3.51044 43.7214 9.07776 43.6388 13.3785C44.6228 16.141 45.122 19.3515 45.122 22.9255C45.122 25.7585 44.8131 28.3764 44.199 30.7014C43.883 32.1973 43.4449 33.6332 42.8955 34.9633C41.3082 38.8477 38.6867 42.2594 35.3003 44.8419C33.6269 46.0838 31.7703 47.1246 29.7773 47.9325C27.7842 48.7369 25.7409 49.2979 23.7119 49.5978C21.9918 49.8659 20.1567 50 18.2571 50C18.0201 50 17.7794 50 17.5424 49.9929H17.4886L16.0126 49.9118C15.7397 49.8977 15.474 49.8765 15.201 49.8448L14.4828 49.7671C13.7915 49.7105 13.1226 49.6037 12.4731 49.4999C12.4343 49.4937 12.3956 49.4875 12.3569 49.4814L12.355 49.4811C12.0683 49.4353 11.7817 49.3895 11.5058 49.3473C11.0498 49.2838 10.6332 49.0368 10.3639 48.6699C10.0981 48.31 9.99039 47.8549 10.0622 47.4174C10.134 46.9764 10.389 46.5707 10.7697 46.299L10.8487 46.2426L10.9348 46.1967L11.1575 46.0838C11.9511 45.6075 12.6837 45.2477 13.3947 44.8984L13.3947 44.8984C13.4415 44.8754 13.4882 44.8525 13.5348 44.8297C13.7671 44.7158 13.9969 44.6031 14.2243 44.4856L14.2386 44.4785L14.253 44.4715L14.885 44.1681C11.7716 43.4413 9.16085 42.2135 6.97747 40.4565C2.34857 36.7168 0 30.8178 0 22.922C0 19.3374 0.502749 16.1198 1.4903 13.3538C1.4077 9.06012 1.81708 3.50692 4.15488 0.871437C4.66122 0.299887 5.3543 0 6.15152 0C7.51972 0 9.23626 0.927886 11.373 2.82952C14.4757 1.52413 18.1421 0.885549 22.5556 0.885549C26.969 0.885549 30.6427 1.52413 33.7454 2.83305ZM22.5592 9.70929C27.0732 9.70929 30.2944 10.5419 32.3951 12.2389C34.8766 14.2499 36.0904 17.7463 36.0904 22.9255C36.0904 33.8978 30.6822 36.1417 22.5592 36.1417C14.4361 36.1417 9.02797 33.8943 9.02797 22.9255C9.02797 17.7498 10.2346 14.2464 12.7232 12.2389C14.824 10.5349 18.0452 9.70929 22.5592 9.70929ZM17.9051 28.3058C19.4601 28.3058 20.7313 27.0675 20.7313 25.5504V22.3081C20.6559 22.3151 20.5769 22.3187 20.4979 22.3187C19.2482 22.3187 18.2391 21.3343 18.2391 20.1171C18.2391 19.1293 18.9034 18.2931 19.8192 18.0144C19.3164 17.5593 18.6449 17.277 17.9051 17.277C16.3502 17.277 15.0789 18.5154 15.0789 20.0325V25.5504C15.0789 27.0639 16.3502 28.3058 17.9051 28.3058ZM27.2096 28.3058C28.7646 28.3058 30.0358 27.0675 30.0358 25.5504V22.0929C29.9245 22.1105 29.8132 22.1211 29.6982 22.1211C28.4485 22.1211 27.4395 21.1367 27.4395 19.9196C27.4395 18.967 28.0607 18.159 28.9262 17.8521C28.4485 17.4922 27.856 17.277 27.2096 17.277C25.6547 17.277 24.3834 18.5154 24.3834 20.0325V25.5504C24.3834 27.0639 25.6547 28.3058 27.2096 28.3058Z" fill="white"></path></svg><div style="margin-top:18px;opacity:0.5;">Preparing your game…</div></div></div><script type="text/javascript">performance.mark('gf:iframe-start');
-function loadScript(url, callback) {
-  var head = document.head;
-  var script = document.createElement('script');
-  script.type = 'text/javascript';
-  script.src = url;
-  script.async = true;
-  script.onreadystatechange = callback;
-  script.onload = callback;
-  script.fetchPriority = 'high';
-  head.appendChild(script);
-}
-var options = {"loader":"unity6","loaderOptions":{"showProgress":true,"unityLoaderUrl":"https://files.crazygames.com/space-waves/100/Build/81bbae32c7a77bc49304934b19e72883.loader.js","unityConfigOptions":{"codeUrl":"https://files.crazygames.com/space-waves/100/Build/9adf8a1aafea4c2333e26d66a8b36d56.wasm.br","dataUrl":"https://files.crazygames.com/space-waves/100/Build/e4aa851098e3e5d328e4d879078ad6c5.data.br","frameworkUrl":"https://files.crazygames.com/space-waves/100/Build/f3dc87e8bc321dd382fbd3fa53e1091f.framework.js.br"}},"thumbnail":"space-waves_16x9/20260330040751/space-waves_16x9-cover","gameName":"Space Waves","gameHttps":true,"gameSlug":"space-waves","gameId":"22682","buildId":"b3de0346-785f-4749-8562-8a67516c5176","gameStatus":"published","showAdOnExternal":"ALWAYS","showAdOnInternal":"DEFAULT","disableEmbedding":false,"dollarRate":0.8518018163821932,"upvotes":1122696,"downvotes":139201,"releaseDate":"2024-04-16","locale":"en_US","controls":{"text":"<h2>Controls</h2><h3>PC Controls</h3><ul><li><span contenteditable=\"false\"></span>Hold the left mouse button / W / Spacebar to go up and release to go down.</li><li><span contenteditable=\"false\"></span>P to pause the game</li></ul><h3>Mobile Controls</h3><p>Hold the screen to go up and release to go down. </p>"},"video":{"original":"https://videos.crazygames.com/space-waves/8/space-waves.m4a","sizes":[{"width":205,"height":115,"location":"https://videos.crazygames.com/space-waves/8/space-waves-landscape-205x115_30fps.m4a"},{"width":249,"height":140,"location":"https://videos.crazygames.com/space-waves/8/space-waves-landscape-249x140_30fps.m4a"},{"width":364,"height":208,"location":"https://videos.crazygames.com/space-waves/8/space-waves-landscape-364x208_30fps.m4a"},{"width":494,"height":276,"location":"https://videos.crazygames.com/space-waves/8/space-waves-landscape-494x276_30fps.m4a"},{"width":611,"height":343,"location":"https://videos.crazygames.com/space-waves/8/space-waves-landscape-611x343_30fps.m4a"},{"width":1024,"height":576,"location":"https://videos.crazygames.com/space-waves/8/space-waves-landscape-1024x576_30fps.m4a"},{"width":1280,"height":720,"location":"https://videos.crazygames.com/space-waves/8/space-waves-landscape-1280x720_30fps.m4a"},{"width":1920,"height":1080,"location":"https://videos.crazygames.com/space-waves/8/space-waves-landscape-1920x1080_30fps.m4a"}],"portraitOriginal":null,"portraitSizes":[],"blurredVideo":{"width":922,"height":532,"location":"https://videos.crazygames.com/space-waves/8/space-waves-landscape-922x532_30fps_blurred.m4a"}},"sandbox":true,"totalSizeBytes":16991813,"initialLoadSizeBytes":0,"minTimeBetweenMidrollAdsInMs":180000,"minTimeBetweenRewardedAdsInMs":5000,"noMidrollAdInFirstMinutes":3,"noRewardedAdInFirstMinutes":0,"categoryEnSlug":"arcade","tagsEnSlugs":["one-button","mobile","avoid","space","difficult","side-scrolling","climb-the-ranks","quick-break","be-the-best","2d","obstacle","skill","mouse","casual"],"isKids":false,"hasMidroll":true,"hasRewarded":true,"fullscreen":"SUPPORTED","orientation":"LANDSCAPE","multiplayerOptions":{"maxLobbySize":null,"minLobbySize":null,"isMultiplayer":null,"hasModeratedChat":null,"supportsInstantJoin":null},"platformAudioMuteSupported":true,"launchFlow":"full","loadFileSize":16991813,"userProgressionSaveMessage":"cloud","apsStorageType":"sdk","androidFriendly":true,"iosFriendly":true,"chromebookFriendly":true,"safariFriendly":true,"category":"Avoid","categoryLink":"https://www.crazygames.com/t/avoid","gameLink":"https://www.crazygames.com/game/space-waves","domainHasNoCMP":false,"source":"games"};
-var SDK_READY = false;
-var GF_READY = false;
-var GF_LOAD_CALLED = false;
-
-// Build GF path
-var gfBuildPath = 'https://builds.crazygames.com/gameframe'
-var gfDefaultVersion = '1'
-var useLocalGF = false
-var customGFHost = ''
-var params = new URLSearchParams(window.location.search);
-var version = params.get('v');
-// Validate version param to prevent XSS
-if(version) {
-  var versionRegex = /^\d+(\.\d+)?(\.\d+)?$/;
-  if(!versionRegex.test(version)) {
-    console.error('Invalid Gameframe version provided, falling back to default version');
-    version = null;
+    transform: rotate(360deg);
   }
 }
-var gameframeJs = gfBuildPath + '/v' + (version || gfDefaultVersion) + '/bundle.js';
-if (useLocalGF) {
-  gameframeJs = 'http://localhost:3002/bundle.js';
-}
+</style>
+<div id="unity-container"><canvas id="unity-canvas" width="1534" height="1080" style="cursor: default;"></canvas></div><div id="loading-cover" style="display: none;"><div id="unity-loading-bar"><div id="unity-logo"><img src="images/logo.png"></div><div id="unity-progress-bar-empty" style="background: none; margin: 5px !important;"><div id="unity-progress-bar-full" style="margin-top: 0px; width: 100%;"></div></div><div class="spinner" style="display: none;"></div></div></div><script src="js/microsoftDataMigrationDO.js"></script><script>document.addEventListener("DOMContentLoaded", () => {
+ microsoftMigration();
+ });
+	 
+ window.addEventListener("PlayerPrefsReady", () => {
+ migratePlayerPrefs();
+ });</script><script>window.addEventListener("load", function () {
+ if ("serviceWorker" in navigator) {
+ navigator.serviceWorker.register("ServiceWorker.js");
+ }
+ });
+	 
+	 const container = document.querySelector("#unity-container");
+ const canvas = document.querySelector("#unity-canvas");
+ const loadingCover = document.querySelector("#loading-cover");
+ const progressBarEmpty = document.querySelector("#unity-progress-bar-empty");
+ const progressBarFull = document.querySelector("#unity-progress-bar-full");
+ const spinner = document.querySelector('.spinner');
 
-if (customGFHost) {
-  gameframeJs = customGFHost + '/bundle.js';
-}
+ const buildUrl = "https://slope3.com/game/space-wave/Build";
+ const loaderUrl = buildUrl + "/dae5c7bd2b15915f51ae4e56b8f5367d.loader.js";
+ const config = {
+ dataUrl: buildUrl + "/568ea6b3af616bd57f419c508c933303.data.unityweb",
+ frameworkUrl: buildUrl + "/c699bc4c24abfbdb4c8b3e15b0af7d3f.framework.js.unityweb",
+ codeUrl: buildUrl + "/7fb5141de5923189bc1dc5f94eb619f2.wasm.unityweb",
+ streamingAssetsUrl: "StreamingAssets",
+ companyName: "do.Games",
+ productName: "Space Waves",
+ productVersion: "1.1.2-ms",
+		matchWebGLToCanvasSize: "false"
+ };
+	 
+	 var needMigrate = false;
+	 var gameInstance;
+ var script = document.createElement("script");
+ script.src = loaderUrl;
+ script.onload = () => {
+ createUnityInstance(canvas, config, (progress) => {
+		 spinner.style.display = "none";
+ progressBarEmpty.style.display = "";
+ progressBarFull.style.width = 100 * progress + "%";
+ }).then((unityInstance) => {
+		 console.log("<do.G> Unity inited");
+ gameInstance = unityInstance;
+ loadingCover.style.display = "none";
+		 resizeCanvas();
+		 loadAds();
+		 
+		 if (needMigrate) {
+			needMigrate = false;
+		 gameInstance.SendMessage('MSStartSDK', 'OnMigratePlayerPrefs', window["fetchPlayerPrefs"]);
+		 }
+		 
+ }).catch((message) => {
+ alert(message);
+ });
+ };
+ document.body.appendChild(script);
+	 
+	 // Focus
+	 function setFocus() {
+	 container.focus();
+		window.focus();
+		canvas.focus();
+	 }
 
-loadScript(gameframeJs, function() {
-  Crazygames.load(options).then(function() {
-    var loaderWrapper = document.getElementById('ziggyLoader');
-    var loaderStyles = document.getElementById('ziggyLoaderStyles');
-    if (loaderWrapper && loaderStyles) {
-      loaderWrapper.remove();
-      loaderStyles.remove();
-    }
-  });
-});</script></body></html>
+	 window.addEventListener("touchstart", () => {
+	 setFocus();
+	 });
+	 window.addEventListener("pointerdown", () => {
+	 setFocus();
+	 });
+	 window.addEventListener("resize", () => {
+	 setFocus();
+		resizeCanvas();
+	 });
+	 
+	 function resizeCanvas() {
+		var pixelRatio = window.devicePixelRatio || 1;
+		var width = canvas.clientWidth * pixelRatio;
+		var height = canvas.clientHeight * pixelRatio;
+			
+		if (canvas.width != width || canvas.height != height) {
+			if (height > 1080) {
+				canvas.width = Math.floor(width / height * 1080);
+				canvas.height = 1080;
+			}
+			else
+			{
+				canvas.width = width;
+				canvas.height = height;
+			}
+		}
+	 }
+	 
+	 function migratePlayerPrefs() {
+	 if (typeof gameInstance !== 'undefined') {
+		 gameInstance.SendMessage('MSStartSDK', 'OnMigratePlayerPrefs', window["fetchPlayerPrefs"]);
+		} else {
+		 needMigrate = true;
+		}
+	 }</script><script src="js/msstart-v1.0.0-rc.13.min.js"></script><script>
+	 var _interstitialAdInstance = null;
+	 var _rewardedAdInstance = null;
+	 
+	 function loadAds() {
+	 loadInterstitialAd();
+	 loadRewardedAd();
+	 }
+	 
+	 function loadInterstitialAd() {
+	 _interstitialAdInstance = null;
+		
+		if (typeof $msstart === 'undefined' || !$msstart) {
+			console.warn('<do.G> $msstart is not defined yet. Retrying interstitial load in 3 seconds...');
+			setTimeout(loadInterstitialAd, 3000);
+			return;
+		}
+
+		$msstart.loadAdsAsync().then(adInstance => {
+		 // Use the adInstance.instanceId to make a call to showAdsAsync
+		 _interstitialAdInstance = adInstance;
+		 console.log("Interstitial ad successfully loaded!");
+	 }).catch(e => {
+		 console.error('<do.G> Error loading interstitial ad. Will retry in 20 seconds...', e);
+		 setTimeout(loadInterstitialAd, 20000);
+		});
+	 }
+	 
+	 function loadRewardedAd() {
+	 _rewardedAdInstance = null;
+		
+		if (typeof $msstart === 'undefined' || !$msstart) {
+			console.warn('<do.G> $msstart is not defined yet. Retrying rewarded load in 3 seconds...');
+			setTimeout(loadRewardedAd, 3000);
+			return;
+		}
+
+		$msstart.loadAdsAsync(true).then(adInstance => {
+		 // Pass in boolean true for the optional parameter isRewardedAd, to fetch Rewarded ads
+		 _rewardedAdInstance = adInstance;
+		 console.log("Rewarded ad successfully loaded!");
+	 }).catch(e => {
+		 console.error('<do.G> Error loading rewarded ad. Will retry in 20 seconds...', e);
+		 setTimeout(loadRewardedAd, 20000);
+		});
+	 }
+	 
+	 async function showInterstitialAd() {
+	 if (_interstitialAdInstance == null || typeof $msstart === 'undefined' || !$msstart) {
+		 gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
+		 return;
+		}
+		
+		let t;
+		
+		try {
+		 t = await $msstart.showAdsAsync(_interstitialAdInstance.instanceId);
+		} catch (e) {
+		 console.error('<do.G> Error show interstitial ad: ', e);
+		 gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
+		 loadInterstitialAd();
+		}
+		
+		if (t) {
+		 try {
+		 await t.showAdsCompletedAsync;
+			gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdClose');
+			loadInterstitialAd();
+		 } catch (e) {
+ console.error('<do.G> Error interstitial showAdsCompletedAsync: ', e);
+		 gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
+		 loadInterstitialAd();
+ }
+		}
+	 }
+	 
+	 async function showRewardedAd() {
+	 if (_rewardedAdInstance == null || typeof $msstart === 'undefined' || !$msstart) {
+		 gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
+		 return;
+		}
+		
+		let t;
+		
+		try {
+		 t = await $msstart.showAdsAsync(_rewardedAdInstance.instanceId);
+		} catch (e) {
+		 console.error('<do.G> Error show rewarded ad: ', e);
+		 gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
+		 loadRewardedAd();
+		}
+		
+		if (t) {
+		 try {
+		 await t.showAdsCompletedAsync;
+			gameInstance.SendMessage('MSStartSDK', 'OnReward');
+			loadRewardedAd();
+		 } catch (e) {
+ console.error('<do.G> Error rewarded showAdsCompletedAsync: ', e);
+		 gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
+		 loadRewardedAd();
+ }
+		}
+	 }
+	 </script><!-- End Game --><script src="js/jquery-3.4.1.min.js"></script><script defer="" src="js/jquery.raty.min.js"></script><script>let FlagTimeout = 0;
+	let timeTimeout = 39000;
+	function ChangeFlagTimeout() {		
+		FlagTimeout = 1;
+		setTimeout(function() {
+			FlagTimeout = 0;
+		}, timeTimeout);
+	}
+
+ function none_ads_inGame() {
+		document.getElementById("AdsInGame").style.display = "none";
+		document.getElementById("btn_close").style.display = "none";
+		document.getElementById("vaule_countdown").style.display = "block";
+ }
+	function show_Ads1() {
+		let ads1 = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3669370410817131" crossorigin="anonymous"><\/script><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3669370410817131" data-ad-slot="5290016702" data-ad-format="auto" data-full-width-responsive="true"></ins>';
+		document.getElementById("Ads1").innerHTML = ads1;
+		(adsbygoogle = window.adsbygoogle || []).push({});
+	}
+	function show_ads_inGame_dp() {
+ document.getElementById("AdsInGame").style.display = "block";
+	 let ads_innt='<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3669370410817131" crossorigin="anonymous"><\/script><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3669370410817131" data-ad-slot="5290016702" data-ad-format="auto" data-full-width-responsive="true"></ins>';
+		document.getElementsByClassName("ads_loadding_content")[0].innerHTML = ads_innt;
+		(adsbygoogle = window.adsbygoogle || []).push({});	
+ var countDownClose = 6;
+ var x = setInterval(function () {
+ countDownClose = countDownClose - 1;
+ document.getElementById("vaule_countdown").innerHTML = "Continue in " + countDownClose;
+ if (countDownClose < 0) {
+ clearInterval(x);
+ document.getElementById("vaule_countdown").style.display = "none";
+ document.getElementById("btn_close").style.display = "block";
+ countDownClose = 6;
+ document.getElementById("vaule_countdown").innerHTML = "Continue in " + countDownClose;
+
+ }
+ }, 1000);
+ }
+	function show_ads_inGame(){
+		if(FlagTimeout==0){		
+			show_ads_inGame_dp();
+			ChangeFlagTimeout();
+		}else{
+			none_ads_inGame(false);
+		}
+	}
+	document.getElementsByClassName("tilte-game")[0].innerHTML = 'Space Waves';
+	show_ads_inGame();
+	show_Ads1();</script> <script>(function() {
+ function isEditable(el) {
+ if (!el) return false;
+ if (el.isContentEditable) return true;
+ var tag = (el.tagName || '').toUpperCase();
+ return tag === 'INPUT' || tag === 'TEXTAREA';
+ }
+
+ var origAddEventListener = EventTarget.prototype.addEventListener;
+ EventTarget.prototype.addEventListener = function(type, listener, options) {
+ if (['keydown','keypress','keyup'].includes(type) &&
+ (this === document || this === window)) {
+ var wrapped = function(ev) {
+ if (isEditable(ev.target)) {
+ return; 
+ }
+ return listener.call(this, ev);
+ };
+ return origAddEventListener.call(this, type, wrapped, options);
+ }
+ return origAddEventListener.call(this, type, listener, options);
+ };
+})();</script><script> 
+		function ToggleInfo(){
+			let width_panel = $("div.main-panel").css('width');
+			width_panel = width_panel.replaceAll('px','');
+			if (( width_panel >= 300)) {
+				$("div.main-panel").css('width', '0px');
+				$("div.main-panel-ads").css('display', 'none'); 
+				$("div.main-panel-content").css('display', 'none'); 			
+				$('button.hide-main-panel').children('i').html('Info');
+			} else {
+				$("div.main-panel").css('width', $("div.main-panel").css('max-width'));
+				$("div.main-panel-ads").css('display', 'block'); 
+				$("div.main-panel-content").css('display', 'block'); 
+				$('button.hide-main-panel').children('i').html('>>');
+			}
+		}
+		function ShowInfo(){
+			$("div.main-panel").css('width', $("div.main-panel").css('max-width'));
+			$("div.main-panel-ads").css('display', 'block'); 
+			$("div.main-panel-content").css('display', 'block'); 
+			$('button.hide-main-panel').children('i').html('>>');
+		}
+		function HideInfo(){			
+			$("div.main-panel").css('width', '0px');
+			$("div.main-panel-ads").css('display', 'none'); 
+			$("div.main-panel-content").css('display', 'none'); 			
+			$('button.hide-main-panel').children('i').html('Info');
+		}
+		$('button.hide-main-panel').click(function () {				
+			ToggleInfo();
+		});		
+	 </script> </div><script src="https://slope3.com/game/space-wave/Build/dae5c7bd2b15915f51ae4e56b8f5367d.loader.js"></script><script src="https://slope3.com/game/space-wave/Build/dae5c7bd2b15915f51ae4e56b8f5367d.loader.js"></script><script src="js/dae5c7bd2b15915f51ae4e56b8f5367d.loader.js"></script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" data-cf-beacon="{" version":"2024.11.0","token":"c7068728fe2d4e47b5f71794ca0429b2","r":1,"spa":2}"=""></script>
+<script src="blob:null/589e7ed0-8131-4f6e-b9b3-742397c43795"></script><script src="blob:null/10cec5b6-f109-4784-9a7e-9d42dfe6855e"></script></body></html>

@@ -182,7 +182,7 @@
         }
         .dropdown-item:hover { background: #00ffff; color: #000; font-weight: bold; }
 
-        #iframe-wrapper { flex: 1; position: relative; background: #000; }
+        #iframe-wrapper { flex: 1; position: relative; background: #000; width: 100%; height: calc(100vh - 48px); }
         iframe { width: 100%; height: 100%; border: none; }
 
         /* Premium Centered Smooth Fade Modal Transitions */
@@ -377,19 +377,19 @@
                 id: 'gd', name: 'geometry dash', img: "Images/Games/geometrydash.jpg",
                 zoomOut: true,
                 options: [
-                    { name: 'Lite', url: 'https://geometrydash23.com/' },
-                    { name: 'SubZero', url: 'https://lolygames.github.io/gd-zubero/' },
-                    { name: 'Meltdown', url: 'https://geometrydashworld.online/' },
-                    { name: 'World', url: 'https://geometrydashlite.io/geometry-dash-world' },
-                    { name: 'Breeze', url: 'https://1games.io/game/geometry-dash-breeze/' }
+                    { name: 'Lite', url: 'Games/Geometry Dash/Geometry Dash Lite/index.html' },
+                    { name: 'SubZero', url: 'Games/Geometry Dash/Geometry Dash Subzero/index.html' },
+                    { name: 'Meltdown', url: 'Games/Geometry Dash/Geometry Dash Meltdown/index.html' },
+                    { name: 'World', url: 'Games/Geometry Dash/Geometry Dash World/index.html' },
+                    { name: 'Breeze', url: 'Games/Geometry Dash/Geometry Dash Breeze/index.html' }
                 ]
             },
             { id: 'nealfun', name: 'Neal.fun', url: "https://neal.fun", img: "Images/Games/nealfun.jpg", zoomOut: true },
             { id: 'framesynthesis', name: 'Frame Synthesis', url: "https://cdn.framesynthesis.com/bin/DrivingSimulatorGM/30/", img: "Images/Games/framesynthesis.jpg", zoomOut: true },
             { id: 'slitherio', name: 'Slither.io', url: "http://slither.com/io", img: "Images/Games/slitherio.jpg", zoomOut: true },
-            { id: 'winterfox', name: 'Winter Fox', url: "https://html-classic.itch.zone/html/4411977/index.html", img: "Images/Games/winterfox.jpg", zoomOut: true },
-            { id: 'paperio', name: 'Paper.io', url: "https://games.voodoo.io/paperio2", img: "Images/Games/paperio.jpg", zoomOut: true },
-                        { 
+            { id: 'winterfox', name: 'Winter Fox', url: "Games/Winter Fox/index.html", img: "Images/Games/winterfox.jpg", zoomOut: true },
+            { id: 'paperio', name: 'Paper.io', url: "https://paperio.site/", img: "Images/Games/paperio.jpg", zoomOut: true },
+            { 
                 id: 'chesscom', name: 'Chess.com', img: "Images/Games/chesscom.jpg",
                 zoomOut: true,
                 options: [
@@ -397,18 +397,18 @@
                     { name: '2', url: 'https://justdoinghomework.com' },
                     { name: '3', url: 'https://schoolschoolschool.com' },
                     { name: '4', url: 'https://superhardalgebraproblems.com' },
-		    { name: '5', url: 'https://schoolnetworkadminsarethebest.com' },
-		    { name: '6', url: 'https://pleasedontblockchess.com' },
-		    { name: '7', url: 'https://chezz.xyz' },
+		            { name: '5', url: 'https://schoolnetworkadminsarethebest.com' },
+		            { name: '6', url: 'https://pleasedontblockchess.com' },
+		            { name: '7', url: 'https://chezz.xyz' },
                     { name: '8', url: 'https://plansformyfuture.com' }
                 ]
             },
             { id: 'agario', name: 'Agar.io', url: "https://agar.io/#ffa", img: "Images/Games/agario.jpg" },
             { id: 'holeio', name: 'Hole.io', url: "https://holeio.com", img: "Images/Games/holeio.jpg" },
             { id: 'fnaf', name: 'Five Nights At Freddys', url: "https://dorukyum.github.io/FNAF-Web/", img: "Images/Games/fnaf.jpg", zoomOut: true },
-            { id: 'happywheels', name: 'Happy Wheels', url: "https://games.crazygames.com/en_US/happy-wheels/index.html?czySeasonWorldCup=false&czySeasonWorldCupKeyMatch=false&isNewUser=false&__nextLocale=en-US&v=2.2", img: "Images/Games/happywheels.jpg", zoomOut: true },
+            { id: 'happywheels', name: 'Happy Wheels', url: "Games/Happy Wheels/index.html", img: "Images/Games/happywheels.jpg", zoomOut: true },
             { id: 'spaceWaves', name: 'space waves', url: "Games/Space Waves/spacewaves.html", img: "Images/Games/spacewaves.jpg" },
-            { id: 'amongUs', name: 'among us', url: "https://stgames.top/unity/amongus/", img: "Images/Games/amongus.jpg" },
+            { id: 'amongUs', name: 'among us', url: "Games/Among Us/index.html", img: "Images/Games/amongus.jpg" },
             { id: 'stickmanHook', name: 'stickman hook', url: "https://spaedu23.github.io/g5/class-406/", img: "Images/Games/stickmanhook.jpg" },
             { 
                 id: 'minecraft', name: 'minecraft', img: "Images/Games/minecraft.jpg",
@@ -476,21 +476,6 @@
             }
         ];
 
-        // Fallback Mapping for Local/Un-hosted URLs
-        const fallbackUrls = {
-	    "Games/Slope/slope.html": "https://playslope.pages.dev/assets/Slope-Game-main/",
-            "Games/Space Waves/spacewaves.html": "https://games.crazygames.com/en_US/space-waves/index.html?czyExpPauseVideos_CZY_19495=disabled&czyGPModelSwitcher_20260512=ineligible&isNewUser=false&__nextLocale=en-US&v=1.357",
-            "./Games/Minecraft/Astra_Client_1.6.0.html": "https://eaglercraft.dev/clients/Astra%20Client%201.6.0%20WASM/index.html",
-            "./Games/Minecraft/EaglyMC_1.20.html": "https://eaglercraft.dev/clients/EaglyMC%201.20%20WASM/index.html",
-            "./Games/Minecraft/Pixel_Client_1.8.8.html": "https://eaglercraft.dev/clients/PixelClient%203%201.8.8%20WASM/index.html",
-            "./Games/Minecraft/Pixel_Client_1.12.2.html": "https://eaglercraft.dev/clients/PixelClient%203%201.12.2%20WASM/index.html",
-            "./Games/Minecraft/Release_1.8.8.html": "https://eaglercraft.dev/clients/Release%201.8.8%20WASM/index.html",
-            "./Games/Minecraft/Release_1.12.2.html": "https://eaglercraft.dev/clients/Release%201.12.2%20WASM/index.html",
-            "./Games/Minecraft/Resent_Client_4.0.html": "https://eaglercraft.dev/clients/Resent%20Client%204.0%20JS/index.html",
-            "./Games/Minecraft/Resent_Client_5.0.html": "https://eaglercraft.dev/clients/Resent%20Client%205.0%20WASM/index.html",
-            "./Games/Minecraft/Tuff_Client_1.12.2.html": "https://eaglercraft.dev/clients/Tuff%20Client%20WASM/index.html"
-        };
-
         let currentActiveUrl = "";
 
         function createCard(item, container) {
@@ -502,7 +487,6 @@
             if (item.zoomOut) extraClasses += ' zoom-out-img';
 
             let media = `<div class="img-container${extraClasses}">`;
-            // If the image fails to load, we make it transparent to reveal the container's solid black background
             media += `<img src="${item.img}" onerror="this.style.opacity='0';">`;
             media += `</div>`;
             media += `<span>${item.name}</span>`;
@@ -538,14 +522,12 @@
             const frame = document.getElementById('overlay-frame');
             const titleEl = document.getElementById('active-title');
             
-            currentActiveUrl = url; // Update trackable URL
+            currentActiveUrl = url;
 
             overlay.classList.add('active');
             titleEl.innerText = title;
             
-            // Apply sandboxing globally to block any popup/new tab creation
             frame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-modals');
-            
             frame.src = url;
 
             frame.onload = () => {
@@ -578,18 +560,14 @@
             }
         }
 
-        // Helper functions to handle fallback URL modal and copy workflows
         function getDirectUrl(url) {
-            if (fallbackUrls[url]) {
-                return fallbackUrls[url];
+            if (!url) return "No link found";
+            if (url.startsWith('http://') || url.startsWith('https://')) {
+                return url;
             }
-            if (url && (url.startsWith('.') || (!url.startsWith('http') && !url.startsWith('blob')))) {
-                return new URL(url, window.location.href).href;
-            }
-            return url || "No link found";
+            return new URL(url, window.location.href).href;
         }
 
-        // Dynamic 100-character breaking logic to keep layout perfectly aligned
         function chunkText(text, size) {
             if (!text) return '';
             const chunks = [];
@@ -599,17 +577,14 @@
             return chunks.map(chunk => `<span class="url-chunk">${chunk}</span>`).join('<br>');
         }
 
-        // Setup modal content
         function showNotWorkingModal() {
             const modal = document.getElementById('not-working-modal');
             const urlText = document.getElementById('modal-url-text');
             const targetUrl = getDirectUrl(currentActiveUrl);
             
-            // Re-render URL with exactly 100 character line-breaks
             urlText.innerHTML = chunkText(targetUrl, 100);
             
             modal.classList.remove('hidden');
-            // Force reflow for fade transitions
             void modal.offsetWidth;
             modal.classList.add('show');
         }
@@ -654,7 +629,6 @@
             const grid = document.getElementById('gridContainer');
             const otherCont = document.getElementById('otherContainer');
             
-            // Clear existing elements to resolve duplication glitches
             if (grid) grid.innerHTML = '';
             if (otherCont) otherCont.innerHTML = '';
             

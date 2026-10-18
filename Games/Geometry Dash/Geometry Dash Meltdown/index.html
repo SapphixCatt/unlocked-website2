@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geometry Dash Meltdown</title>
+  <link rel="icon" type="image/png" href="img/GDM.png">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #000;
+    }
+
+    /* Custom Loading Screen Container */
+    #loadingScreen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+    }
+
+    /* Fullscreen Background Image */
+    .fullscreen-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
+
+    /* Centered Overlay Container */
+    .logo-container {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .robtop-logo {
+      transform: scale(0.8);
+      height: auto;
+      margin-bottom: 4px;
+    }
+
+    .gj-logo {
+      transform: scale(0.8);
+      height: auto;
+    }
+
+    /* Loading Bar Wrapper */
+    .loading-bar-wrapper {
+      position: relative;
+      margin-top: 20px;
+      transform: scale(0.8);
+      display: inline-block;
+    }
+
+    .slider-groove {
+      display: block;
+      height: auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Inner Loading Fill */
+    .loading-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      z-index: 1;
+      object-fit: cover;
+      object-position: left; 
+      animation: fillProgress 2s linear forwards;
+    }
+
+    @keyframes fillProgress {
+      0% {
+        width: 0%;
+      }
+      100% {
+        width: 100%;
+      }
+    }
+
+    /* Random Text Image */
+    .random-text-img {
+      position: absolute;
+      bottom: calc((45vh - 120px) / 2);
+      left: 50%;
+      transform: translateX(-50%) scale(0.5);
+      z-index: 2;
+      height: auto;
+    }
+
+    /* Bottom Right Logos Stack */
+    .bottom-right-logos {
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .fmod-logo,
+    .cocos-logo {
+      height: auto;
+      transform: scale(0.8);
+    }
+
+    /* Unity Game Container */
+    #gameContainer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #231f20;
+      z-index: 1;
+    }
+
+    #gameContainer canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom Loading Screen -->
+  <div id="loadingScreen">
+    <img class="fullscreen-bg" src="img/BG_Load.png" alt="Background">
+
+    <div class="logo-container">
+      <img class="robtop-logo" src="img/RobTopLogoBig_001.png" alt="RobTop Logo">
+      <img class="gj-logo" src="img/GJ_logo_001.png" alt="Geometry Dash Logo">
+      
+      <div class="loading-bar-wrapper">
+        <img class="slider-groove" src="img/slidergroove-uhd.png" alt="Loading Bar Groove">
+        <img class="loading-fill" id="loadingFill" src="img/loadingBar-uhd.png" alt="Loading Bar Fill">
+      </div>
+    </div>
+
+    <img id="randomText" class="random-text-img" src="" alt="Loading Text">
+
+    <div class="bottom-right-logos">
+      <img class="fmod-logo" src="img/fmodLogo.png" alt="FMOD Logo">
+      <img class="cocos-logo" src="img/cocos2DxLogo.png" alt="Cocos2Dx Logo">
+    </div>
+  </div>
+
+  <!-- Unity Game Container -->
+  <div id="gameContainer">
+    <canvas id="#canvas" width="2560" height="918"></canvas>
+  </div>
+
+  <!-- Unity Callbacks -->
+  <script>
+    function UnityCallPlayJs() { console.log("unity call play game"); }
+    function UnityCallAgainJs() { console.log("unity call again"); }
+    function UnityCallChooseLevelJs() { console.log("unity call choose level"); }
+    function UnityCallCloseLeaderboardJs() { console.log("unity call close leaderboard"); }
+    function UnityCallChooseCharacterJs() { console.log("unity call choose character"); }
+    function UnityCallChooseColorJs() { console.log("unity call choose color"); }
+    function UnityCallEndgameJs() { console.log("unity call end game"); }
+    function UnityCallContinueJs() { console.log("unity call continue"); }
+    function UnityCallChangeModeJs() { console.log("unity call change mode"); }
+    function UnityCallPauseGameJs() { console.log("unity call pause game"); }
+    function UnityCallChangeLevelJs() { console.log("unity call change level"); }
+    function UnityCallLevelUpJs() { console.log("unity call level up"); }
+  </script>
+
+  <!-- Unity Loader -->
+  <script src="Build/UnityLoader.js"></script>
+
+  <script>
+    // Random loading text selector
+    const randomIndex = Math.floor(Math.random() * 68) + 1;
+    document.getElementById('randomText').src = `img/load-screen-text/text${randomIndex}.png`;
+
+    // Instantiate Unity Engine
+    var gameInstance = UnityLoader.instantiate("gameContainer", "Build/GeometryDashMeltDown_.json");
+
+    // Instant swap logic
+    const loadingFill = document.getElementById('loadingFill');
+    const loadingScreen = document.getElementById('loadingScreen');
+
+    loadingFill.addEventListener('animationend', function() {
+      setTimeout(function() {
+        loadingScreen.style.display = 'none';
+      }, 1000);
+    });
+
+    // Mobile Fullscreen Handler
+    var theElement = document.getElementById("gameContainer");
+    theElement.addEventListener("mouseup", tapOrClick, false);
+    theElement.addEventListener("touchend", tapOrClick, false);
+
+    function tapOrClick(event) {
+      fullScreenAPI();
+      return false;
+    }
+    
+    function fullScreenAPI(){
+      var ua = navigator.userAgent.toLowerCase();
+      var isAndroid = ua.indexOf("android") > -1;
+      if(isAndroid) {
+        GoFullScreen(document.documentElement);
+      }
+    }
+
+    function GoFullScreen(element) {
+      if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+        if(element.requestFullscreen && document.fullscreenEnabled){
+          element.requestFullscreen();
+        } else if(element.mozRequestFullScreen){
+          element.mozRequestFullScreen();
+        } else if(element.webkitRequestFullscreen){
+          element.webkitRequestFullscreen();
+        } else if(element.msRequestFullscreen){
+          element.msRequestFullscreen();
+        }
+      }
+    }
+  </script>
+
+</body>
+</html>

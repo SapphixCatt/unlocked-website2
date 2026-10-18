@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geometry Dash World</title>
+  <link rel="icon" type="image/png" href="img/GDW.png">
+  
+  <!-- ABSOLUTE CSP ANTI-REDIRECT SANDBOX SHIELD -->
+  <!-- This restricts form submissions and locks frame navigation down to this page only -->
+  <meta http-equiv="Content-Security-Policy" content="form-action 'self'; sandbox allow-same-origin allow-scripts allow-pointer-lock; navigate-to 'self';">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #000;
+    }
+
+    /* Loading Screen Container */
+    #loadingScreen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      transition: opacity 0.3s ease;
+    }
+
+    /* Fullscreen Background Image */
+    .fullscreen-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
+
+    /* Centered Overlay Container */
+    .logo-container {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .robtop-logo {
+      transform: scale(0.8);
+      height: auto;
+      margin-bottom: 4px;
+    }
+
+    .gj-logo {
+      transform: scale(0.8);
+      height: auto;
+    }
+
+    /* Loading Bar Wrapper */
+    .loading-bar-wrapper {
+      position: relative;
+      margin-top: 20px;
+      transform: scale(0.8);
+      display: inline-block;
+    }
+
+    .slider-groove {
+      display: block;
+      height: auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Inner Loading Fill */
+    .loading-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      z-index: 1;
+      object-fit: cover;
+      object-position: left; 
+      animation: fillProgress 2s linear forwards;
+    }
+
+    @keyframes fillProgress {
+      0% {
+        width: 0%;
+      }
+      100% {
+        width: 100%;
+      }
+    }
+
+    /* Random Text Image */
+    .random-text-img {
+      position: absolute;
+      bottom: calc((45vh - 120px) / 2);
+      left: 50%;
+      transform: translateX(-50%) scale(0.5);
+      z-index: 2;
+      height: auto;
+    }
+
+    /* Bottom Right Logos Stack */
+    .bottom-right-logos {
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .fmod-logo,
+    .cocos-logo {
+      height: auto;
+      transform: scale(0.8);
+    }
+
+    /* Unity Canvas Container */
+    #unity-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1;
+    }
+
+    #unity-canvas {
+      width: 100%;
+      height: 100%;
+      background: #000;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom Geometry Dash Loading Screen -->
+  <div id="loadingScreen">
+    <img class="fullscreen-bg" src="img/BG_Load.png" alt="Background">
+
+    <div class="logo-container">
+      <img class="robtop-logo" src="img/RobTopLogoBig_001.png" alt="RobTop Logo">
+      <img class="gj-logo" src="img/GJ_logo_001.png" alt="Geometry Dash Logo">
+      
+      <div class="loading-bar-wrapper">
+        <img class="slider-groove" src="img/slidergroove-uhd.png" alt="Loading Bar Groove">
+        <img class="loading-fill" id="loadingFill" src="img/loadingBar-uhd.png" alt="Loading Bar Fill">
+      </div>
+    </div>
+
+    <img id="randomText" class="random-text-img" src="" alt="Loading Text">
+
+    <div class="bottom-right-logos">
+      <img class="fmod-logo" src="img/fmodLogo.png" alt="FMOD Logo">
+      <img class="cocos-logo" src="img/cocos2DxLogo.png" alt="Cocos2Dx Logo">
+    </div>
+  </div>
+
+  <!-- Direct Unity Game Container -->
+  <div id="unity-container">
+    <canvas id="unity-canvas" tabindex="-1"></canvas>
+  </div>
+
+  <script>
+    // --- LOCALIZED INTERCEPTOR MECHANICS ---
+    (function() {
+      // Intercept XMLHttpRequest (XHR) calls from internal assemblies to keep game.txt search folder-bound
+      var proxiedOpen = window.XMLHttpRequest.prototype.open;
+      window.XMLHttpRequest.prototype.open = function(method, url) {
+        if (typeof url === 'string' && url.includes('game.txt')) {
+          url = "./game.txt";
+          console.log("[Interceptor] Forced game.txt query local!");
+        }
+        return proxiedOpen.apply(this, arguments);
+      };
+
+      // Intercept Fetch API requests
+      var originalFetch = window.fetch;
+      window.fetch = function(input, init) {
+        if (typeof input === 'string' && input.includes('game.txt')) {
+          input = "./game.txt";
+          console.log("[Interceptor] Forced game.txt fetch local!");
+        }
+        return originalFetch(input, init);
+      };
+    })();
+    // ---------------------------------------
+
+    // Random loading text selector
+    const randomIndex = Math.floor(Math.random() * 68) + 1;
+    document.getElementById('randomText').src = `img/load-screen-text/text${randomIndex}.png`;
+
+    // Unity Setup
+    var canvas = document.querySelector("#unity-canvas");
+    var buildUrl = "Build";
+    var loaderUrl = buildUrl + "/geometry-dash-world.loader.js";
+    var config = {
+      dataUrl: buildUrl + "/geometry-dash-world.data",
+      frameworkUrl: buildUrl + "/geometry-dash-world.framework.js",
+      codeUrl: buildUrl + "/geometry-dash-world.wasm",
+      streamingAssetsUrl: 'StreamingAssets',
+      companyName: "Greenlight",
+      productName: "Geometry Dash World",
+      productVersion: "1.0.1",
+    };
+
+    // Dummy ad handler functions to prevent Unity errors
+    window.show_ads_inGame = function() {};
+    window.none_ads_inGame = function() {};
+    window.none_loadding = function() {};
+
+    // Load Unity engine in the background
+    var script = document.createElement("script");
+    script.src = loaderUrl;
+    script.onload = function() {
+      createUnityInstance(canvas, config, function(progress) {})
+        .then(function(unityInstance) {
+          if (canvas) {
+            canvas.focus();
+          }
+        })
+        .catch(function(message) {
+          alert(message);
+        });
+    };
+    document.body.appendChild(script);
+
+    // Hide loading overlay after a 1 second (1000ms) delay when bar animation ends
+    const loadingFill = document.getElementById('loadingFill');
+    const loadingScreen = document.getElementById('loadingScreen');
+
+    loadingFill.addEventListener('animationend', () => {
+      setTimeout(() => {
+        loadingScreen.style.display = 'none';
+        if (canvas) {
+          canvas.focus();
+        }
+      }, 1000);
+    });
+  </script>
+
+</body>
+</html>
