@@ -1,0 +1,144 @@
+<html lang="en-US"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Subway Surfers</title><meta name="description" content="Take part in endless adventure races in Subway Surfers. You need to show your talent and enthusiasm with running and jumping actions on the subway tracks."><meta name="title" content="Subway Surfers"><meta name="keywords" content="Subway Surfers"><meta name="news_keywords" content="Subway Surfers"><!-- META FOR FACEBOOK --><meta property="og:title" content="Subway Surfers" itemprop="headline"><meta property="og:type" content="website"><meta property="og:description" content="Take part in endless adventure races in Subway Surfers. You need to show your talent and enthusiasm with running and jumping actions on the subway tracks." itemprop="description"><meta property="og:site_name" content="Space Waves"><!-- META FOR TWITTER --><meta name="twitter:title" content="Subway Surfers"><meta name="twitter:description" content="Take part in endless adventure races in Subway Surfers. You need to show your talent and enthusiasm with running and jumping actions on the subway tracks."><meta name="twitter:card" content="summary"><link rel="preconnect" href="https://fonts.gstatic.com"><link href="fonts/css2.css" rel="stylesheet"><link rel="stylesheet" href="css/reboot.css"><link rel="stylesheet" href="css/grid.css"><link rel="stylesheet" href="css/body-style.css?v=1"><script>window.dataLayer = window.dataLayer || [];</script>
+ </head><body>function gtag() {
+ dataLayer.push(arguments);
+ }
+ gtag('js', new Date());
+
+<link rel="stylesheet" type="text/css" href="assets/font/lilita-one.css?v=1gefx1jwdk0gj12hb" media="all"><link rel="stylesheet" type="text/css" href="assets/font/titan-one.css?v=1gefx1jwdk0gj12hb" media="all"><script src="js/inflate.min.js?v=1gefx1jwdk0gj12hb"></script><script src="js/vendor.js?v=1gefx1jwdk0gj12hb"></script><script src="js/main.js?v=1gefx1jwdk0gj12hb"></script><style>.cr-img img{
+	width: 90px;
+ height: 90px;
+}</style><div style=" position: fixed; top: 0; left: 0;width:100vw; height:100vh;"><link rel="stylesheet" href="css/home.css?v=1.3"><link rel="stylesheet" href="game.css?v=3.22">	<!-- game --><base href="subway-surfers-ny/"><style>body {
+	background-color: #000000;
+	margin: 0;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+ }
+
+ .fontcache {
+	position: fixed;
+	margin-left: -100px;
+ }
+
+ #og-game-holder {
+	position: fixed;
+	overflow: hidden;
+	width: 100%;
+	height: 100vh;
+	background-position: center;
+	background-repeat: no-repeat;
+	margin: 0;
+ }</style><script src="js/games_lib/ludiAdapter.js" charset="utf-8"></script><div id="og-game-holder" style="background-color: rgb(255, 164, 205);"><canvas style="touch-action: none; position: absolute; width: 1147px; height: 939px; left: 0px; top: 0px; cursor: inherit;" width="1147" height="939"></canvas></div><script src="js/boot.js"></script><!-- footer --><script src="js/jquery-3.4.1.min.js?"></script><script defer="" src="plugins/raty/jquery.raty.min.js"></script><script>let FlagTimeout = 0;
+	let timeTimeout = 39000;
+	function ChangeFlagTimeout() {		
+		FlagTimeout = 1;
+		setTimeout(function() {
+			FlagTimeout = 0;
+		}, timeTimeout);
+	}
+
+ function none_ads_inGame() {
+		document.getElementById("AdsInGame").style.display = "none";
+		document.getElementById("btn_close").style.display = "none";
+		document.getElementById("vaule_countdown").style.display = "block";
+ }
+	function show_ads_inGame(){
+		if(FlagTimeout==0){		
+			show_ads_inGame_dp();
+			ChangeFlagTimeout();
+		}else{
+			none_ads_inGame(false);
+		}
+	}
+	function none_loadding() {
+		let loader = document.querySelector("#loader");
+		if(loader==null){
+			loader = document.querySelector("#unity-loading-bar")
+		}
+		loader.style.display = "none";
+	}
+	
+function show_ads_inGame_dp() {
+  document.getElementById("AdsInGame").style.display = "block";
+  let ads_innt = '';
+  document.getElementsByClassName("ads_loadding_content")[1].innerHTML = ads_innt;
+    
+  var countDownClose = 6;
+  var x = setInterval(function () {
+    countDownClose = countDownClose - 1;
+    document.getElementById("vaule_countdown").innerHTML = "Continue in " + countDownClose;
+    if (countDownClose < 0) {
+      clearInterval(x);
+      document.getElementById("vaule_countdown").style.display = "none";
+      document.getElementById("btn_close").style.display = "block";
+      countDownClose = 6;
+      document.getElementById("vaule_countdown").innerHTML = "Continue in " + countDownClose;
+    }
+  }, 1000);
+}
+ }
+ }, 1000);
+ }
+function show_Ads1() {
+        let ads1 = '';
+        document.getElementById("Ads1").innerHTML = ads1;
+    }
+    function show_Ads_Loading() {
+        let ads_load = '';
+        document.getElementsByClassName("ads_loadding_content")[0].innerHTML = ads_load;
+    }
+        show_Ads1();
+        show_Ads_Loading();
+        document.getElementsByClassName("tilte-game")[0].innerHTML = 'Subway Surfers';
+</script> <script>(function() {
+ function isEditable(el) {
+ if (!el) return false;
+ if (el.isContentEditable) return true;
+ var tag = (el.tagName || '').toUpperCase();
+ return tag === 'INPUT' || tag === 'TEXTAREA';
+ }
+
+ var origAddEventListener = EventTarget.prototype.addEventListener;
+ EventTarget.prototype.addEventListener = function(type, listener, options) {
+ if (['keydown','keypress','keyup'].includes(type) &&
+ (this === document || this === window)) {
+ var wrapped = function(ev) {
+ if (isEditable(ev.target)) {
+ return; 
+ }
+ return listener.call(this, ev);
+ };
+ return origAddEventListener.call(this, type, wrapped, options);
+ }
+ return origAddEventListener.call(this, type, listener, options);
+ };
+})();</script><script> 
+		function ToggleInfo(){
+			let width_panel = $("div.main-panel").css('width');
+			width_panel = width_panel.replaceAll('px','');
+			if (( width_panel >= 300)) {
+				$("div.main-panel").css('width', '0px');
+				$("div.main-panel-ads").css('display', 'none'); 
+				$("div.main-panel-content").css('display', 'none'); 			
+				$('button.hide-main-panel').children('i').html('Info');
+			} else {
+				$("div.main-panel").css('width', $("div.main-panel").css('max-width'));
+				$("div.main-panel-ads").css('display', 'block'); 
+				$("div.main-panel-content").css('display', 'block'); 
+				$('button.hide-main-panel').children('i').html('>>');
+			}
+		}
+		function ShowInfo(){
+			$("div.main-panel").css('width', $("div.main-panel").css('max-width'));
+			$("div.main-panel-ads").css('display', 'block'); 
+			$("div.main-panel-content").css('display', 'block'); 
+			$('button.hide-main-panel').children('i').html('>>');
+		}
+		function HideInfo(){			
+			$("div.main-panel").css('width', '0px');
+			$("div.main-panel-ads").css('display', 'none'); 
+			$("div.main-panel-content").css('display', 'none'); 			
+			$('button.hide-main-panel').children('i').html('Info');
+		}
+		$('button.hide-main-panel').click(function () {				
+			ToggleInfo();
+		});		
+</script> <!-- end footer --></div><div class="fontcache" style="font-family: &quot;Lilita One&quot;;">.</div><div class="fontcache" style="font-family: &quot;Titan One&quot;;">.</div></body></html>
