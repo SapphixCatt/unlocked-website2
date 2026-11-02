@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Drive - My Files</title>
-    <link rel="icon" type="image/x-icon" href="https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png">
+    <title>Home - Classroom</title>
+    <link rel="icon" type="image/x-icon" href="Images/favicon.svg">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -172,15 +172,57 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
             overflow-y: auto;
             max-height: 300px;
+            box-sizing: border-box;
         }
         
         .game-card.active-dropdown { z-index: 10000; border-color: #00ffff; }
         .game-card.active-dropdown .dropdown-menu { visibility: visible; opacity: 1; transform: translateY(0) scale(1); }
 
         .dropdown-item { 
-            padding: 12px; text-align: center; border-bottom: 1px solid #222; font-size: 13px; color: #ddd; transition: background 0.2s;
+            padding: 12px; 
+            text-align: center; 
+            border-bottom: 1px solid #222; 
+            font-size: 13px; 
+            color: #ddd; 
+            transition: background 0.2s;
+            position: relative; 
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+            display: block;
         }
-        .dropdown-item:hover { background: #00ffff; color: #000; font-weight: bold; }
+        
+        /* Standard hover effect for regular links / submenu items */
+        .dropdown-item:hover { 
+            background: #00ffff; 
+            color: #000; 
+            font-weight: bold; 
+        }
+
+        /* Remove hover effect from parent categories with submenus */
+        .dropdown-item.has-submenu:hover { 
+            background: #1a1a1a !important; 
+            color: #ddd !important; 
+            font-weight: 600 !important; 
+        }
+
+        .dropdown-submenu {
+            display: none;
+            background: #151515;
+            border-top: 1px solid #222;
+            border-bottom: 1px solid #222;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .dropdown-item.active-submenu .dropdown-submenu {
+            display: block;
+        }
+        .dropdown-submenu .dropdown-item {
+            padding: 10px 12px;
+            font-size: 12px;
+            width: 100%;
+            box-sizing: border-box;
+        }
 
         #iframe-wrapper { flex: 1; position: relative; background: #000; width: 100%; height: calc(100vh - 48px); }
         iframe { width: 100%; height: 100%; border: none; }
@@ -195,7 +237,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 9999999; /* Higher priority to overlay on top of minimize panels and viewports */
+            z-index: 9999999;
             background: rgba(0, 0, 0, 0.85);
             transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.3s;
             opacity: 0;
@@ -213,10 +255,10 @@
             transform: scale(0.9) translateY(20px);
             transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
             background-color: #050505 !important;
-            border: 1px solid #d1d5db !important; /* Premium light gray outline restored */
-            border-radius: 16px !important; /* Rounded corners */
+            border: 1px solid #d1d5db !important;
+            border-radius: 16px !important;
             box-shadow: 0 10px 50px rgba(0, 0, 0, 0.95) !important;
-            padding: 25px !important; /* EXACTLY 25px padding from text/content to border */
+            padding: 25px !important;
             box-sizing: border-box !important;
         }
         
@@ -224,7 +266,6 @@
             transform: scale(1) translateY(0);
         }
 
-        /* Wrap styling designed to preserve natural breaking logic of URLs */
         #modal-url-text {
             display: block !important;
             line-height: 1.5 !important;
@@ -237,7 +278,6 @@
             display: inline-block;
         }
 
-        /* Premium Styled Buttons */
         .premium-btn-cyan {
             background: linear-gradient(135deg, #00ffff 0%, #00bcbc 100%) !important;
             color: #000000 !important;
@@ -278,7 +318,6 @@
             transform: translateY(1px) !important;
         }
 
-        /* Premium Top Bar Button Style */
         #not-working-btn {
             background: linear-gradient(135deg, #00ffff 0%, #00bcbc 100%) !important;
             color: #000000 !important;
@@ -302,7 +341,6 @@
             transform: scale(0.98) !important;
         }
 
-        /* Fullscreen Button Style - Exact #333333 Color */
         #fullscreen-btn {
             background-color: #333333 !important;
             color: #ffffff !important;
@@ -377,11 +415,23 @@
                 id: 'gd', name: 'Geometry Dash', img: "Images/Games/geometrydash.jpg",
                 zoomOut: true,
                 options: [
-                    { name: 'Lite', url: 'Games/Geometry Dash/Geometry Dash Lite/index.html' },
-                    { name: 'SubZero', url: 'Games/Geometry Dash/Geometry Dash Subzero/index.html' },
-                    { name: 'Meltdown', url: 'Games/Geometry Dash/Geometry Dash Meltdown/index.html' },
-                    { name: 'World', url: 'Games/Geometry Dash/Geometry Dash World/index.html' },
-                    { name: 'Breeze', url: 'Games/Geometry Dash/Geometry Dash Breeze/index.html' }
+                    { 
+                        name: 'Full Version', 
+                        options: [
+                            { name: '2.209', url: 'Games/Geometry Dash/Full Version/2.209/index.html' },
+                            { name: '2.208', url: 'Games/Geometry Dash/Full Version/2.208/index.html' }
+                        ]
+                    },
+                    { 
+                        name: 'Spinoff', 
+                        options: [
+                            { name: 'Lite', url: 'Games/Geometry Dash/Spinoff/Geometry Dash Lite/index.html' },
+                            { name: 'SubZero', url: 'Games/Geometry Dash/Spinoff/Geometry Dash Subzero/index.html' },
+                            { name: 'Meltdown', url: 'Games/Geometry Dash/Spinoff/Geometry Dash Meltdown/index.html' },
+                            { name: 'World', url: 'Games/Geometry Dash/Spinoff/Geometry Dash World/index.html' },
+                            { name: 'Breeze', url: 'Games/Geometry Dash/Spinoff/Geometry Dash Breeze/index.html' }
+                        ]
+                    }
                 ]
             },
             { id: 'nealfun', name: 'Neal.fun', url: "https://neal.fun", img: "Images/Games/nealfun.jpg", zoomOut: true },
@@ -453,10 +503,10 @@
                     { name: 'Web 3', url: 'https://lunarrr.eminescusm.ro' }
                 ]
             },
-            { id: 'movish', name: 'Movish', url: "https://movish.net", img: "Images/Other/movish.png" },
+            { id: 'movish', name: 'Movish', url: "https://movish.to", img: "Images/Other/movish.png" },
             { id: 'tmovie', name: 'TMovie', url: "https://www.tmovie.in", img: "Images/Other/tmovie.png", zoomOut: true },
             { id: 'tv', name: 'Live TV', url: 'https://tv247.us/', img: "Images/Other/livetv.png" },
-            { id: 'cineby', name: 'Cineby', url: "https://www.cineby.sc", img: "Images/Other/cineby.png", zoomOut: true },
+            { id: 'cineby', name: 'Cineby', url: "https://www.cineby.rocks", img: "Images/Other/cineby.png", zoomOut: true },
             { 
                 id: 'dogeub', name: 'Dogeub', img: "Images/Other/dogeub.png", zoomOut: true,
                 options: [
@@ -479,6 +529,40 @@
 
         let currentActiveUrl = "";
 
+        function buildDropdown(items, parentElement, parentTitle = '') {
+            items.forEach(o => {
+                const div = document.createElement('div');
+                div.className = 'dropdown-item';
+                div.innerText = o.name;
+                
+                const currentTitle = parentTitle ? `${parentTitle} - ${o.name}` : o.name;
+
+                if (o.options) {
+                    div.classList.add('has-submenu');
+                    div.innerText += ' ▾';
+                    const subMenu = document.createElement('div');
+                    subMenu.className = 'dropdown-submenu';
+                    buildDropdown(o.options, subMenu, currentTitle);
+                    div.appendChild(subMenu);
+                    
+                    div.onclick = (e) => {
+                        e.stopPropagation();
+                        const siblings = div.parentElement.querySelectorAll(':scope > .dropdown-item');
+                        siblings.forEach(s => {
+                            if (s !== div) s.classList.remove('active-submenu');
+                        });
+                        div.classList.toggle('active-submenu');
+                    };
+                } else {
+                    div.onclick = (e) => { 
+                        e.stopPropagation(); 
+                        run(o.url, currentTitle); 
+                    };
+                }
+                parentElement.appendChild(div);
+            });
+        }
+
         function createCard(item, container) {
             const card = document.createElement('div');
             card.className = 'game-card';
@@ -497,13 +581,7 @@
             if (item.options) {
                 const drop = document.createElement('div');
                 drop.className = 'dropdown-menu';
-                item.options.forEach(o => {
-                    const div = document.createElement('div');
-                    div.className = 'dropdown-item';
-                    div.innerText = o.name;
-                    div.onclick = (e) => { e.stopPropagation(); run(o.url, `${item.name} - ${o.name}`); };
-                    drop.appendChild(div);
-                });
+                buildDropdown(item.options, drop, item.name);
                 card.appendChild(drop);
             }
 

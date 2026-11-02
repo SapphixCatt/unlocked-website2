@@ -2,9 +2,109 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title></title>
+  <title>Among Us WebGL</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <link rel="stylesheet" href="TemplateData/style.css">
+  
+  <script>
+    // Force browser environment to always report 'localhost' to bypass domain locks and IP checks
+    (function() {
+      try {
+        Object.defineProperty(window, 'location', {
+          value: new Proxy(window.location, {
+            get: function(target, prop) {
+              if (prop === 'hostname' || prop === 'host') return 'localhost';
+              if (prop === 'href' || prop === 'origin') {
+                const originalVal = target[prop];
+                if (typeof originalVal === 'string') {
+                  return originalVal.replace(/127\.0\.0\.1|[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+|([a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)/g, 'localhost');
+                }
+              }
+              const val = target[prop];
+              return typeof val === 'function' ? val.bind(target) : val;
+            }
+          }),
+          writable: false
+        });
+      } catch (e) {}
+    })();
+
+    // Automatically wipe corrupted Unity WebGL IndexedDB caches on load
+    if (window.indexedDB && indexedDB.databases) {
+      indexedDB.databases().then(databases => {
+        databases.forEach(db => {
+          if (db.name) {
+            indexedDB.deleteDatabase(db.name);
+          }
+        });
+      }).catch(() => {});
+    }
+
+    // Intercept WebSockets to prevent multiplayer network hangs
+    (function() {
+      const OriginalWebSocket = window.WebSocket;
+      window.WebSocket = function(url, protocols) {
+        try {
+          const ws = new OriginalWebSocket(url, protocols);
+          const connectionTimer = setTimeout(() => {
+            if (ws.readyState === 0) {
+              if (typeof ws.onopen === 'function') ws.onopen(new Event('open'));
+            }
+          }, 3000);
+          ws.addEventListener('open', () => clearTimeout(connectionTimer));
+          ws.addEventListener('error', () => clearTimeout(connectionTimer));
+          return ws;
+        } catch (err) {
+          return {
+            send: function(data) {},
+            close: function() {},
+            readyState: 1,
+            bufferedAmount: 0,
+            onopen: null,
+            onclose: null,
+            onerror: null,
+            onmessage: null,
+            addEventListener: function(event, callback) {
+              if (event === 'open') setTimeout(() => callback(new Event('open')), 50);
+            },
+            removeEventListener: function() {}
+          };
+        }
+      };
+    })();
+
+    // Intercept fetch traffic calls
+    const originalFetch = window.fetch;
+    window.fetch = async function(...args) {
+      const url = typeof args[0] === 'string' ? args[0] : (args[0] && args[0].url ? args[0].url : '');
+      if (url.includes('SendTraffic')) {
+        return new Response(JSON.stringify({ status: "success" }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
+      return originalFetch.apply(this, args);
+    };
+
+    // Intercept XMLHttpRequest calls
+    const originalXHR = window.XMLHttpRequest.prototype.open;
+    window.XMLHttpRequest.prototype.open = function(method, url, ...rest) {
+      if (typeof url === 'string' && url.includes('SendTraffic')) {
+        Object.defineProperty(this, 'send', {
+          value: function() {
+            Object.defineProperty(this, 'readyState', { value: 4 });
+            Object.defineProperty(this, 'status', { value: 200 });
+            Object.defineProperty(this, 'responseText', { value: '{"status":"success"}' });
+            if (typeof this.onreadystatechange === 'function') this.onreadystatechange();
+            if (typeof this.onload === 'function') this.onload();
+          },
+          writable: true
+        });
+      }
+      return originalXHR.apply(this, [method, url, ...rest]);
+    };
+  </script>
+
   <script src="js/a.js"></script>
   <style>
     html, body {
@@ -56,8 +156,9 @@
     <script src="UnityProgress.js"></script>
     <script src="UnityLoader.js"></script>
 
-	<script>
-        var unityInstance = UnityLoader.instantiate("unityContainer", "Build/Game.json", {onProgress: UnityProgress});
+    <script>
+        var cacheBuster = "v=" + new Date().getTime();
+        var unityInstance = UnityLoader.instantiate("unityContainer", "Build/Game.json?" + cacheBuster, {onProgress: UnityProgress});
     </script>
 </body>
 </html>
